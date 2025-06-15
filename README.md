@@ -1,33 +1,35 @@
-# Afirmaciones Diarias
+# Afirmaciones Diarias ✨
 
-Una aplicación web para gestionar y visualizar afirmaciones diarias positivas.
+Una aplicación web interactiva para recibir y compartir afirmaciones positivas diarias.
 
-## Descripción
+## Características
 
-Este proyecto es una aplicación web que permite a los usuarios:
-- Ver afirmaciones diarias motivadoras
-- Guardar sus afirmaciones favoritas
-- Compartir afirmaciones con otros usuarios
-- Crear y personalizar sus propias afirmaciones
+- Afirmación diaria personalizada
+- Sistema de votación para las afirmaciones
+- Interfaz con efecto aurora boreal
+- Diseño responsivo para móviles y escritorio
+- Animaciones suaves y efectos visuales
 
-## Tecnologías
+## Tecnologías Utilizadas
 
-- Framework: Streamlit
-- Base de datos: SQLite
-- Estilos: Streamlit Components y CSS personalizado
+- Streamlit
+- Python
+- JavaScript
+- CSS3
+- HTML5
 
-## Instalación
+## Instalación Local
 
 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/tu-usuario/Afirmaciones_Diarias.git
+git clone https://github.com/felip3-14/Afirmaciones_Diarias.git
 cd Afirmaciones_Diarias
 ```
 
-2. Crear y activar entorno virtual:
+2. Crear y activar un entorno virtual:
 ```bash
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate  # En Windows: .venv\Scripts\activate
 ```
 
 3. Instalar dependencias:
@@ -35,12 +37,7 @@ source venv/bin/activate  # En Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Configurar variables de entorno:
-```bash
-cp .env.example .env
-```
-
-5. Iniciar la aplicación:
+4. Ejecutar la aplicación:
 ```bash
 streamlit run app.py
 ```
@@ -49,36 +46,19 @@ streamlit run app.py
 
 ```
 Afirmaciones_Diarias/
-├── app.py              # Punto de entrada principal de Streamlit
-├── pages/             # Páginas adicionales de la aplicación
-│   ├── mis_afirmaciones.py
-│   ├── crear_afirmacion.py
-│   └── compartir.py
-├── utils/             # Utilidades y funciones auxiliares
-│   ├── __init__.py
-│   ├── database.py
-│   └── helpers.py
-├── static/           # Archivos estáticos (imágenes, CSS)
-├── .env.example      # Ejemplo de variables de entorno
-├── .gitignore        # Archivos ignorados por Git
-├── requirements.txt  # Dependencias del proyecto
-└── README.md         # Este archivo
+├── app.py                 # Archivo principal de la aplicación
+├── requirements.txt       # Dependencias del proyecto
+├── .streamlit/           # Configuración de Streamlit
+├── static/               # Archivos estáticos
+│   └── js/              # Scripts JavaScript
+├── utils/               # Utilidades y módulos
+└── data/                # Datos de la aplicación
 ```
-
-## Despliegue en Streamlit Cloud
-
-Esta aplicación está diseñada para ser desplegada fácilmente en Streamlit Cloud:
-
-1. Sube el repositorio a GitHub
-2. Ve a [share.streamlit.io](https://share.streamlit.io)
-3. Conecta tu repositorio de GitHub
-4. Configura las variables de entorno necesarias
-5. ¡Listo! Tu aplicación estará disponible en la nube
 
 ## Contribuir
 
-Las contribuciones son bienvenidas. Por favor, lee las guías de contribución antes de enviar un pull request.
+Las contribuciones son bienvenidas. Por favor, abre un issue para discutir los cambios que te gustaría hacer.
 
 ## Licencia
 
-MIT 
+Este proyecto está bajo la Licencia MIT. 
