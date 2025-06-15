@@ -2,7 +2,7 @@ Flask==3.0.2
 Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
 Flask-WTF==1.2.1
-python-dotenv==1.0.1
+python-dotenv==1.1.0
 Werkzeug==3.0.1
 email-validator==2.1.0.post1
 Flask-Migrate==4.0.5
@@ -10,4 +10,9 @@ streamlit==1.32.0
 pandas==2.2.1
 sqlalchemy==2.0.28
 pillow==10.2.0
-streamlit-option-menu==0.3.12 
+streamlit-option-menu==0.3.12
+fastapi==0.110.0
+uvicorn==0.27.1
+pydantic==2.6.3
+requests==2.31.0
+python-multipart==0.0.9 

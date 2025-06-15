@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 *.so
 .Python
+env/
 build/
 develop-eggs/
 dist/
@@ -21,9 +22,10 @@ wheels/
 *.egg
 
 # Virtual Environment
+.env
+.venv
 venv/
 ENV/
-env/
 
 # IDE
 .idea/
@@ -36,7 +38,6 @@ instance/
 .webassets-cache
 
 # Environment variables
-.env
 .env.local
 .env.*.local
 
@@ -46,6 +47,11 @@ instance/
 
 # OS
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
 # Dependencies
@@ -59,4 +65,7 @@ node_modules/
 # Logs
 npm-debug.log*
 yarn-debug.log*
-yarn-error.log* 
+yarn-error.log*
+
+# Streamlit
+.streamlit/secrets.toml 
