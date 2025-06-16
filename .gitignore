@@ -68,4 +68,15 @@ yarn-debug.log*
 yarn-error.log*
 
 # Streamlit
-.streamlit/secrets.toml 
+.streamlit/secrets.toml
+
+# User Data and Sensitive Information
+data/user_info.json
+data/recent_affirmations.json
+data/private_messages.json
+data/user_data/
+data/affirmations_history.json
+data/votes_history.json
+data/*.json
+!data/affirmations.json
+!data/colors.json 
