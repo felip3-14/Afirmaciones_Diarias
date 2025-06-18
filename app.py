@@ -7,6 +7,7 @@ from utils.daily_affirmation import daily_affirmation
 from utils.database import save_vote, get_today_votes, save_comment, get_recent_comments
 import random
 from datetime import datetime
+import json
 
 # Configuración de la página (debe ser la primera llamada a Streamlit)
 st.set_page_config(
@@ -186,14 +187,14 @@ if selected == "Inicio":
     """, unsafe_allow_html=True)
     
     # Obtener la afirmación del día
-    affirmation = daily_affirmation.get_daily_affirmation()
+    affirmation = get_daily_affirmation()
     
     # Mostrar la afirmación con animación
     if not st.session_state.affirmation_shown:
         st.markdown(f"""
             <div class="affirmation-card">
                 <div class="typewriter">
-                    <h2 style="color: #2c3e50; text-align: center;">{affirmation['affirmation']}</h2>
+                    <h2 style="color: #2c3e50; text-align: center;">{affirmation}</h2>
                 </div>
             </div>
         """, unsafe_allow_html=True)
@@ -284,12 +285,12 @@ elif selected == "Mensaje Privado":
             
             if submitted and message:
                 # Obtener la afirmación actual
-                current_affirmation = daily_affirmation.get_daily_affirmation()
+                current_affirmation = get_daily_affirmation()
                 
                 # Guardar el mensaje en la base de datos
                 save_private_message(
                     usuario_nombre=st.session_state.user_name,
-                    afirmacion=current_affirmation['affirmation'],
+                    afirmacion=current_affirmation,
                     mensaje=message,
                     ip_address=st.experimental_get_query_params().get("ip", [None])[0],
                     user_agent=st.experimental_get_query_params().get("user_agent", [None])[0]
@@ -382,4 +383,39 @@ if admin_username and st.session_state.user_name == admin_username:
                             st.experimental_rerun()
     else:
         st.error("Acceso denegado")
-        st.session_state.is_admin = False 
+        st.session_state.is_admin = False
+
+AFIRMACIONES_MOSTRADAS_PATH = os.path.join("data", "afirmaciones_mostradas.json")
+
+def load_afirmaciones_mostradas():
+    if not os.path.exists(AFIRMACIONES_MOSTRADAS_PATH):
+        return []
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_afirmacion_mostrada(fecha, afirmacion):
+    historial = load_afirmaciones_mostradas()
+    historial.append({"fecha": fecha, "afirmacion": afirmacion})
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(historial, f, ensure_ascii=False, indent=2)
+
+def get_daily_affirmation():
+    affirmations_dict = load_affirmations()
+    affirmations = affirmations_dict["affirmations"]
+    today = datetime.now().strftime("%Y-%m-%d")
+    historial = load_afirmaciones_mostradas()
+    # Si ya hay afirmación para hoy, usarla
+    for entry in historial[::-1]:
+        if entry["fecha"] == today:
+            return entry["afirmacion"]
+    # Obtener las últimas 4 afirmaciones mostradas
+    ultimas = [entry["afirmacion"] for entry in historial[-4:]]
+    # Buscar la siguiente afirmación secuencial que no esté en las últimas 4
+    for afirmacion in affirmations:
+        if afirmacion not in ultimas:
+            save_afirmacion_mostrada(today, afirmacion)
+            return afirmacion
+    # Si todas han sido usadas recientemente, usar la primera
+    afirmacion = affirmations[0]
+    save_afirmacion_mostrada(today, afirmacion)
+    return afirmacion 
