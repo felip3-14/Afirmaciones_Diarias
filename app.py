@@ -7,6 +7,7 @@ import os
 AFFIRMATIONS_PATH = os.path.join("data", "affirmations.json")
 COMMENTS_PATH = os.path.join("data", "comments.json")
 VOTES_PATH = os.path.join("data", "votes.json")
+AFIRMACIONES_MOSTRADAS_PATH = os.path.join("data", "afirmaciones_mostradas.json")
 
 # Cargar afirmaciones
 @st.cache_data
@@ -14,11 +15,38 @@ def load_affirmations():
     with open(AFFIRMATIONS_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
+def load_afirmaciones_mostradas():
+    if not os.path.exists(AFIRMACIONES_MOSTRADAS_PATH):
+        return []
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_afirmacion_mostrada(fecha, afirmacion):
+    historial = load_afirmaciones_mostradas()
+    historial.append({"fecha": fecha, "afirmacion": afirmacion})
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(historial, f, ensure_ascii=False, indent=2)
+
 def get_daily_affirmation():
-    affirmations = load_affirmations()
-    today = datetime.now().date()
-    idx = today.toordinal() % len(affirmations)
-    return affirmations[idx]
+    affirmations_dict = load_affirmations()
+    affirmations = affirmations_dict["affirmations"]
+    today = datetime.now().strftime("%Y-%m-%d")
+    historial = load_afirmaciones_mostradas()
+    # Si ya hay afirmación para hoy, usarla
+    for entry in historial[::-1]:
+        if entry["fecha"] == today:
+            return entry["afirmacion"]
+    # Obtener las últimas 4 afirmaciones mostradas
+    ultimas = [entry["afirmacion"] for entry in historial[-4:]]
+    # Buscar la siguiente afirmación secuencial que no esté en las últimas 4
+    for afirmacion in affirmations:
+        if afirmacion not in ultimas:
+            save_afirmacion_mostrada(today, afirmacion)
+            return afirmacion
+    # Si todas han sido usadas recientemente, usar la primera
+    afirmacion = affirmations[0]
+    save_afirmacion_mostrada(today, afirmacion)
+    return afirmacion
 
 # Guardar voto
 def save_vote(user, vote):
