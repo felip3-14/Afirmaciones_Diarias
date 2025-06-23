@@ -3,11 +3,52 @@ from streamlit_option_menu import option_menu
 import os
 from dotenv import load_dotenv
 from utils.styles import load_css
-from utils.daily_affirmation import daily_affirmation
 from utils.database import save_vote, get_today_votes, save_comment, get_recent_comments
 import random
 from datetime import datetime
 import json
+
+# --- FUNCIONES DE AFIRMACIONES (PILA) ---
+AFFIRMATIONS_PATH = os.path.join("data", "affirmations.json")
+AFIRMACIONES_MOSTRADAS_PATH = os.path.join("data", "afirmaciones_mostradas.json")
+
+@st.cache_data
+def load_affirmations():
+    with open(AFFIRMATIONS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def load_afirmaciones_mostradas():
+    if not os.path.exists(AFIRMACIONES_MOSTRADAS_PATH):
+        return []
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_afirmacion_mostrada(fecha, afirmacion):
+    historial = load_afirmaciones_mostradas()
+    historial.append({"fecha": fecha, "afirmacion": afirmacion})
+    with open(AFIRMACIONES_MOSTRADAS_PATH, "w", encoding="utf-8") as f:
+        json.dump(historial, f, ensure_ascii=False, indent=2)
+
+def get_daily_affirmation():
+    affirmations_dict = load_affirmations()
+    affirmations = affirmations_dict["affirmations"]
+    today = datetime.now().strftime("%Y-%m-%d")
+    historial = load_afirmaciones_mostradas()
+    # Si ya hay afirmación para hoy, usarla
+    for entry in historial[::-1]:
+        if entry["fecha"] == today:
+            return entry["afirmacion"]
+    # Obtener las últimas 4 afirmaciones mostradas
+    ultimas = [entry["afirmacion"] for entry in historial[-4:]]
+    # Buscar la siguiente afirmación secuencial que no esté en las últimas 4
+    for afirmacion in affirmations:
+        if afirmacion not in ultimas:
+            save_afirmacion_mostrada(today, afirmacion)
+            return afirmacion
+    # Si todas han sido usadas recientemente, usar la primera
+    afirmacion = affirmations[0]
+    save_afirmacion_mostrada(today, afirmacion)
+    return afirmacion
 
 # Configuración de la página (debe ser la primera llamada a Streamlit)
 st.set_page_config(
@@ -383,39 +424,4 @@ if admin_username and st.session_state.user_name == admin_username:
                             st.experimental_rerun()
     else:
         st.error("Acceso denegado")
-        st.session_state.is_admin = False
-
-AFIRMACIONES_MOSTRADAS_PATH = os.path.join("data", "afirmaciones_mostradas.json")
-
-def load_afirmaciones_mostradas():
-    if not os.path.exists(AFIRMACIONES_MOSTRADAS_PATH):
-        return []
-    with open(AFIRMACIONES_MOSTRADAS_PATH, "r", encoding="utf-8") as f:
-        return json.load(f)
-
-def save_afirmacion_mostrada(fecha, afirmacion):
-    historial = load_afirmaciones_mostradas()
-    historial.append({"fecha": fecha, "afirmacion": afirmacion})
-    with open(AFIRMACIONES_MOSTRADAS_PATH, "w", encoding="utf-8") as f:
-        json.dump(historial, f, ensure_ascii=False, indent=2)
-
-def get_daily_affirmation():
-    affirmations_dict = load_affirmations()
-    affirmations = affirmations_dict["affirmations"]
-    today = datetime.now().strftime("%Y-%m-%d")
-    historial = load_afirmaciones_mostradas()
-    # Si ya hay afirmación para hoy, usarla
-    for entry in historial[::-1]:
-        if entry["fecha"] == today:
-            return entry["afirmacion"]
-    # Obtener las últimas 4 afirmaciones mostradas
-    ultimas = [entry["afirmacion"] for entry in historial[-4:]]
-    # Buscar la siguiente afirmación secuencial que no esté en las últimas 4
-    for afirmacion in affirmations:
-        if afirmacion not in ultimas:
-            save_afirmacion_mostrada(today, afirmacion)
-            return afirmacion
-    # Si todas han sido usadas recientemente, usar la primera
-    afirmacion = affirmations[0]
-    save_afirmacion_mostrada(today, afirmacion)
-    return afirmacion 
+        st.session_state.is_admin = False 
