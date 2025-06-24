@@ -3,7 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Afirmación del Día</title>
+    <title>Afirmación del Día - Positividad Diaria</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Recibe una afirmación positiva cada día. Comparte tu energía positiva y conecta con una comunidad de bienestar.">
+    <meta name="keywords" content="afirmaciones, positividad, bienestar, mindfulness, motivación diaria">
+    <meta name="author" content="Felipe">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tu-app.railway.app/">
+    <meta property="og:title" content="Afirmación del Día - Positividad Diaria">
+    <meta property="og:description" content="Recibe una afirmación positiva cada día. Comparte tu energía positiva y conecta con una comunidad de bienestar.">
+    <meta property="og:image" content="https://tu-app.railway.app/static/images/og-image.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tu-app.railway.app/">
+    <meta property="twitter:title" content="Afirmación del Día - Positividad Diaria">
+    <meta property="twitter:description" content="Recibe una afirmación positiva cada día. Comparte tu energía positiva y conecta con una comunidad de bienestar.">
+    <meta property="twitter:image" content="https://tu-app.railway.app/static/images/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+    
+    <!-- Google Analytics (opcional - reemplaza con tu ID) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'GA_MEASUREMENT_ID');
+    </script> -->
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -282,6 +314,14 @@
         <!-- Dashboard de comentarios -->
         <div class="dashboard" id="dashboard">
             <h2>💬 Mensajes Positivos del Día</h2>
+            
+            <!-- Botón de Compartir -->
+            <div style="text-align: center; margin: 2rem 0;">
+                <button onclick="shareApp()" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); font-size: 1.2rem;">
+                    📱 ¡Comparte esta app con tus amigos!
+                </button>
+            </div>
+            
             <div id="commentsContainer">
                 {% for comment in comentarios %}
                     <div class="comment-card">
@@ -424,6 +464,29 @@
         function showDashboard() {
             document.getElementById('affirmationScreen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
+        }
+        
+        // Función para compartir la app
+        function shareApp() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Afirmación del Día ✨',
+                    text: '¡Descubre tu afirmación positiva diaria! Una app increíble para cultivar positividad.',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback para navegadores que no soportan Web Share API
+                const url = window.location.href;
+                const text = '¡Descubre tu afirmación positiva diaria! ✨ ' + url;
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(text).then(() => {
+                        alert('¡Link copiado al portapapeles! Compártelo con tus amigos 📱');
+                    });
+                } else {
+                    prompt('Copia este link para compartir:', text);
+                }
+            }
         }
     </script>
 </body>
