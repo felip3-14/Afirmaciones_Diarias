@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas - Afirmaciones Diarias</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            color: white;
+            padding: 2rem;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: #ffeb3b;
+        }
+        
+        .comment-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ffeb3b;
+        }
+        
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .comment-user {
+            font-weight: bold;
+            color: #ffeb3b;
+        }
+        
+        .comment-text {
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+        
+        .comment-affirmation {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-style: italic;
+        }
+        
+        .list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .list-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .list-count {
+            background: #ffeb3b;
+            color: #333;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 2rem;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .list-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-button">← Volver a la App</a>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📊 Estadísticas de Afirmaciones Diarias</h1>
+            <p>Panel de control y análisis de la comunidad</p>
+        </div>
+        
+        <!-- Estadísticas generales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ total_comentarios }}</div>
+                <div class="stat-label">Comentarios Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ total_votos }}</div>
+                <div class="stat-label">Votos Totales</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ usuarios_unicos }}</div>
+                <div class="stat-label">Usuarios Únicos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">
+                    👍 {{ votos_stats.positivo|default:0 }}<br>
+                    😐 {{ votos_stats.neutral|default:0 }}<br>
+                    👎 {{ votos_stats.negativo|default:0 }}
+                </div>
+                <div class="stat-label">Distribución de Votos</div>
+            </div>
+        </div>
+        
+        <!-- Comentarios recientes -->
+        <div class="section">
+            <h2>💬 Comentarios Recientes</h2>
+            {% for comentario in comentarios_recientes %}
+                <div class="comment-item">
+                    <div class="comment-header">
+                        <span class="comment-user">👤 {{ comentario.nombre_usuario }}</span>
+                        <span>🕒 {{ comentario.fecha_creacion|date:"d/m/Y H:i" }}</span>
+                    </div>
+                    <div class="comment-text">{{ comentario.texto }}</div>
+                    <div class="comment-affirmation">💭 "{{ comentario.afirmacion_texto|truncatechars:60 }}"</div>
+                </div>
+            {% empty %}
+                <p style="text-align: center; opacity: 0.7;">No hay comentarios aún.</p>
+            {% endfor %}
+        </div>
+        
+        <div class="list-grid">
+            <!-- Usuarios más activos -->
+            <div class="section">
+                <h2>🏆 Usuarios Más Activos</h2>
+                {% for usuario in usuarios_activos %}
+                    <div class="list-item">
+                        <span>👤 {{ usuario.nombre_usuario }}</span>
+                        <div class="list-count">{{ usuario.total }}</div>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; opacity: 0.7;">No hay datos aún.</p>
+                {% endfor %}
+            </div>
+            
+            <!-- Afirmaciones más populares -->
+            <div class="section">
+                <h2>⭐ Afirmaciones Más Comentadas</h2>
+                {% for afirmacion in afirmaciones_populares %}
+                    <div class="list-item">
+                        <span>💭 {{ afirmacion.afirmacion_texto|truncatechars:40 }}</span>
+                        <div class="list-count">{{ afirmacion.total }}</div>
+                    </div>
+                {% empty %}
+                    <p style="text-align: center; opacity: 0.7;">No hay datos aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="/admin/" style="color: #ffeb3b; text-decoration: none; font-size: 1.2rem;">
+                🔧 Ir al Panel de Administración
+            </a>
+        </div>
+    </div>
+</body>
+</html> 

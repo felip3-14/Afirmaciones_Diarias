@@ -3,6 +3,7 @@ from django.utils import timezone
 from .models import Comentario, Voto
 from django.db.models import Count
 from django.http import JsonResponse
+from django.contrib.admin.views.decorators import staff_member_required
 import json
 import os
 import time
@@ -119,3 +120,43 @@ def index(request):
         'votos': votos_dict,
         'mensaje': mensaje,
     })
+
+@staff_member_required
+def estadisticas(request):
+    """Vista para ver estadísticas y comentarios (solo para staff)"""
+    
+    # Estadísticas generales
+    total_comentarios = Comentario.objects.count()
+    total_votos = Voto.objects.count()
+    usuarios_unicos = Comentario.objects.values('nombre_usuario').distinct().count()
+    
+    # Comentarios recientes (últimos 50)
+    comentarios_recientes = Comentario.objects.order_by('-fecha_creacion')[:50]
+    
+    # Votos por tipo
+    votos_stats = Voto.objects.values('valor').annotate(count=Count('id'))
+    votos_dict = {v['valor']: v['count'] for v in votos_stats}
+    
+    # Usuarios más activos (comentarios)
+    usuarios_activos = (Comentario.objects
+                       .values('nombre_usuario')
+                       .annotate(total=Count('id'))
+                       .order_by('-total')[:10])
+    
+    # Afirmaciones más comentadas
+    afirmaciones_populares = (Comentario.objects
+                             .values('afirmacion_texto')
+                             .annotate(total=Count('id'))
+                             .order_by('-total')[:10])
+    
+    context = {
+        'total_comentarios': total_comentarios,
+        'total_votos': total_votos,
+        'usuarios_unicos': usuarios_unicos,
+        'comentarios_recientes': comentarios_recientes,
+        'votos_stats': votos_dict,
+        'usuarios_activos': usuarios_activos,
+        'afirmaciones_populares': afirmaciones_populares,
+    }
+    
+    return render(request, 'afirmaciones/estadisticas.html', context)
