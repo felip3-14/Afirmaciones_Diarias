@@ -82,6 +82,146 @@
             pointer-events: none;
         }
         
+        /* Pantalla de consentimiento de cookies */
+        .cookie-consent-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .consent-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
+        }
+        
+        .consent-content h1 {
+            color: #2c3e50;
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: none;
+        }
+        
+        .consent-message {
+            text-align: left;
+            margin-bottom: 2rem;
+        }
+        
+        .consent-message p {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .consent-message ul {
+            color: #2c3e50;
+            text-align: left;
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .consent-message li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        .consent-buttons {
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .accept-btn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
+            font-size: 1.2rem !important;
+            padding: 1.2rem 2rem !important;
+        }
+        
+        .decline-btn {
+            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+            font-size: 1rem !important;
+            padding: 0.8rem 1.5rem !important;
+        }
+        
+        .privacy-note {
+            color: #7f8c8d;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        
+        /* Pantalla de rechazo de cookies */
+        .cookie-declined-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .declined-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #333;
+        }
+        
+        .declined-content h1 {
+            color: #e74c3c;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            text-shadow: none;
+        }
+        
+        .declined-content p {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .reload-btn {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .reload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
         /* Pantalla de bienvenida */
         .welcome-screen {
             animation: fadeIn 1s ease-in;
@@ -92,11 +232,6 @@
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
         }
         
         .welcome-screen p {
@@ -269,20 +404,108 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .container { padding: 2rem; }
             .welcome-screen h1 { font-size: 2rem; }
             .affirmation-text { font-size: 1.8rem; }
+            
+            /* Responsive para consentimiento de cookies */
+            .consent-content {
+                padding: 2rem;
+                max-width: 95%;
+            }
+            
+            .consent-content h1 {
+                font-size: 1.8rem;
+            }
+            
+            .consent-message {
+                text-align: center;
+            }
+            
+            .consent-message ul {
+                text-align: left;
+                padding-left: 1rem;
+            }
+            
+            .consent-buttons {
+                flex-direction: column;
+                gap: 0.8rem;
+            }
+            
+            .accept-btn {
+                font-size: 1.1rem !important;
+                padding: 1rem 1.5rem !important;
+            }
+            
+            .decline-btn {
+                font-size: 0.9rem !important;
+                padding: 0.7rem 1rem !important;
+            }
+            
+            .declined-content {
+                padding: 2rem;
+                max-width: 95%;
+            }
+            
+            .declined-content h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Pantalla de consentimiento de cookies -->
+        <div class="cookie-consent-screen" id="cookieConsentScreen">
+            <div class="consent-content">
+                <h1>🍪 ¡Hola! Bienvenido a Afirmaciones Diarias</h1>
+                <div class="consent-message">
+                    <p>Para que puedas participar y compartir tu energía positiva, necesitamos tu consentimiento para usar cookies de seguridad.</p>
+                    <p><strong>¿Por qué necesitamos cookies?</strong></p>
+                    <ul>
+                        <li>🔒 Para proteger tus comentarios y votos</li>
+                        <li>✨ Para que puedas interactuar de forma segura</li>
+                        <li>📱 Para que la app funcione correctamente en tu dispositivo</li>
+                    </ul>
+                    <p>Sin estas cookies, la aplicación no podrá funcionar correctamente.</p>
+                </div>
+                <div class="consent-buttons">
+                    <button onclick="acceptCookies()" class="accept-btn">
+                        ✅ Acepto las cookies y quiero continuar
+                    </button>
+                    <button onclick="declineCookies()" class="decline-btn">
+                        ❌ No acepto
+                    </button>
+                </div>
+                <div class="privacy-note">
+                    <small>Solo usamos cookies esenciales para el funcionamiento. No compartimos tu información con terceros.</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de rechazo de cookies -->
+        <div class="cookie-declined-screen" id="cookieDeclinedScreen" style="display: none;">
+            <div class="declined-content">
+                <h1>😔 Lo sentimos</h1>
+                <p>Sin el consentimiento de cookies, no podemos ofrecerte la experiencia completa de Afirmaciones Diarias.</p>
+                <p>Si cambias de opinión, puedes recargar la página y aceptar las cookies.</p>
+                <button onclick="location.reload()" class="reload-btn">
+                    🔄 Recargar página
+                </button>
+            </div>
+        </div>
+
         <!-- Pantalla de bienvenida -->
-        <div class="welcome-screen" id="welcomeScreen">
-            <h1>✨ Bienvenido a Afirmaciones Diarias ✨</h1>
-            <p>Comienza tu viaje de positividad</p>
+        <div class="welcome-screen" id="welcomeScreen" style="display: none;">
+            <h1>✨ ¡Perfecto! Comencemos tu día positivo ✨</h1>
+            <p>Ahora que todo está configurado, vamos a conocerte</p>
             <form id="nameForm">
                 {% csrf_token %}
                 <input type="text" id="userName" placeholder="¿Cómo te llamas?" required>
@@ -356,10 +579,76 @@
     <script>
         let currentUser = '';
         let timerInterval;
+        let cookiesAccepted = false;
         
-        // Manejar formulario de nombre
+        // Verificar si ya se aceptaron las cookies anteriormente
+        function checkCookieConsent() {
+            const consent = localStorage.getItem('cookieConsent');
+            if (consent === 'accepted') {
+                cookiesAccepted = true;
+                showWelcomeScreen();
+                return true;
+            }
+            return false;
+        }
+        
+        // Aceptar cookies
+        function acceptCookies() {
+            console.log('🍪 Usuario aceptó cookies');
+            localStorage.setItem('cookieConsent', 'accepted');
+            cookiesAccepted = true;
+            
+            // Ocultar pantalla de consentimiento
+            document.getElementById('cookieConsentScreen').style.display = 'none';
+            
+            // Forzar la creación de la cookie CSRF
+            fetch(window.location.href, {
+                method: 'GET',
+                credentials: 'include'
+            }).then(() => {
+                console.log('🍪 Cookie CSRF inicializada');
+                showWelcomeScreen();
+            }).catch(() => {
+                console.log('🍪 Continuando sin inicialización CSRF');
+                showWelcomeScreen();
+            });
+        }
+        
+        // Rechazar cookies
+        function declineCookies() {
+            console.log('🚫 Usuario rechazó cookies');
+            localStorage.setItem('cookieConsent', 'declined');
+            document.getElementById('cookieConsentScreen').style.display = 'none';
+            document.getElementById('cookieDeclinedScreen').style.display = 'flex';
+        }
+        
+        // Mostrar pantalla de bienvenida
+        function showWelcomeScreen() {
+            document.getElementById('cookieConsentScreen').style.display = 'none';
+            document.getElementById('cookieDeclinedScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'block';
+        }
+        
+        // Inicializar la app
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Iniciando app...');
+            
+            // Si no hay consentimiento previo, mostrar pantalla de cookies
+            if (!checkCookieConsent()) {
+                console.log('🍪 Mostrando pantalla de consentimiento');
+                document.getElementById('cookieConsentScreen').style.display = 'flex';
+            }
+        });
+        
+        // Manejar formulario de nombre (solo si se aceptaron cookies)
         document.getElementById('nameForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            if (!cookiesAccepted) {
+                alert('Por favor, acepta las cookies primero para continuar.');
+                return;
+            }
+            
             currentUser = document.getElementById('userName').value.trim();
             if (currentUser) {
                 document.getElementById('voteUserName').value = currentUser;
@@ -450,6 +739,12 @@
         document.getElementById('commentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // Verificar consentimiento de cookies antes de enviar
+            if (!cookiesAccepted) {
+                alert('Error: No se puede enviar el comentario sin aceptar las cookies de seguridad.');
+                return;
+            }
+            
             const submitButton = this.querySelector('button[type="submit"]');
             const textarea = this.querySelector('textarea[name="comentario"]');
             const comentarioText = textarea.value.trim();
@@ -458,6 +753,7 @@
             console.log('📱 Iniciando envío de comentario...');
             console.log('📱 User Agent:', navigator.userAgent);
             console.log('📱 Texto comentario:', comentarioText.substring(0, 50));
+            console.log('🍪 Cookies aceptadas:', cookiesAccepted);
             
             // Validación client-side
             if (!comentarioText) {
@@ -492,7 +788,8 @@
                     'X-CSRFToken': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest',
                     'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                },
+                credentials: 'include'  // Importante para cookies
             })
             .then(response => {
                 clearTimeout(timeoutId);
