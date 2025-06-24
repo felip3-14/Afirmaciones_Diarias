@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afirmación del Día</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
+            pointer-events: none;
+        }
+        
+        /* Pantalla de bienvenida */
+        .welcome-screen {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        .welcome-screen h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .welcome-screen p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        /* Pantalla de afirmación */
+        .affirmation-screen {
+            display: none;
+            animation: slideInFromTop 1s ease-out;
+        }
+        
+        .affirmation-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.4;
+            opacity: 0;
+            animation: textReveal 2s ease-out 1s forwards;
+        }
+        
+        @keyframes textReveal {
+            0% { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            100% { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        .timer {
+            font-size: 1.5rem;
+            margin: 1rem 0;
+            color: #ffeb3b;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        
+        .timer #countdown {
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        /* Cartel de comentarios animado */
+        .comment-popup {
+            position: fixed;
+            bottom: -300px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #333;
+            padding: 2rem;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 600px;
+            transition: bottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1000;
+        }
+        
+        .comment-popup.show {
+            bottom: 0;
+        }
+        
+        .comment-popup h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        /* Dashboard de comentarios */
+        .dashboard {
+            display: none;
+            animation: fadeIn 1s ease-in;
+            text-align: left;
+        }
+        
+        .dashboard h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .comment-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ffeb3b;
+            animation: slideInFromLeft 0.5s ease-out;
+            backdrop-filter: blur(10px);
+        }
+        
+        .comment-card strong {
+            color: #ffeb3b;
+            font-size: 1.1rem;
+        }
+        
+        .comment-card .comment-text {
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .comment-card .comment-time {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Formularios y botones */
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 1rem;
+            border: none;
+            border-radius: 10px;
+            margin: 0.5rem 0;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        button, input[type="submit"] {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 1rem 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        button:hover, input[type="submit"]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        
+        .vote-buttons {
+            margin: 2rem 0;
+        }
+        
+        .vote-buttons button {
+            font-size: 1.5rem;
+            margin: 0.5rem;
+        }
+        
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideInFromTop {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container { padding: 2rem; }
+            .welcome-screen h1 { font-size: 2rem; }
+            .affirmation-text { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Pantalla de bienvenida -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h1>✨ Bienvenido a Afirmaciones Diarias ✨</h1>
+            <p>Comienza tu viaje de positividad</p>
+            <form id="nameForm">
+                {% csrf_token %}
+                <input type="text" id="userName" placeholder="¿Cómo te llamas?" required>
+                <br>
+                <button type="submit">Comenzar mi día ✨</button>
+            </form>
+        </div>
+        
+        <!-- Pantalla de afirmación -->
+        <div class="affirmation-screen" id="affirmationScreen">
+            <h2>Tu afirmación de hoy</h2>
+            <div class="affirmation-text" id="affirmationText">
+                {% if afirmacion %}{{ afirmacion }}{% endif %}
+            </div>
+            <div class="timer" id="timer">Tómate un momento para reflexionar... <span id="countdown">8</span>s</div>
+            
+            <div class="vote-buttons" id="voteButtons" style="display: none;">
+                <h3>¿Te resuena esta afirmación?</h3>
+                <form method="post" id="voteForm">
+                    {% csrf_token %}
+                    <input type="hidden" name="nombre_voto" id="voteUserName">
+                    <button type="submit" name="voto" value="positivo">👍 Sí</button>
+                    <button type="submit" name="voto" value="neutral">😐 Neutral</button>
+                    <button type="submit" name="voto" value="negativo">👎 No</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Dashboard de comentarios -->
+        <div class="dashboard" id="dashboard">
+            <h2>💬 Mensajes Positivos del Día</h2>
+            <div id="commentsContainer">
+                {% for comment in comentarios %}
+                    <div class="comment-card">
+                        <strong>{{ comment.nombre_usuario }}</strong>
+                        <div class="comment-text">{{ comment.texto }}</div>
+                        <div class="comment-time">{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</div>
+                    </div>
+                {% empty %}
+                    <div class="comment-card">
+                        <div class="comment-text">¡Sé el primero en compartir un mensaje positivo hoy! 🌟</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <button onclick="location.reload()">🔄 Nueva sesión</button>
+        </div>
+    </div>
+    
+    <!-- Cartel popup para comentarios -->
+    <div class="comment-popup" id="commentPopup">
+        <h3>💭 ¿Quieres dejar un comentario positivo?</h3>
+        <p>Comparte tu energía positiva con otros</p>
+        <form method="post" id="commentForm">
+            {% csrf_token %}
+            <input type="hidden" name="nombre_comentario" id="commentUserName">
+            <textarea name="comentario" rows="3" placeholder="Escribe tu mensaje positivo aquí..." required></textarea>
+            <br>
+            <button type="submit">✨ Compartir positividad</button>
+            <button type="button" onclick="skipComment()">Omitir</button>
+        </form>
+    </div>
+    
+    <script>
+        let currentUser = '';
+        let timerInterval;
+        
+        // Manejar formulario de nombre
+        document.getElementById('nameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            currentUser = document.getElementById('userName').value.trim();
+            if (currentUser) {
+                document.getElementById('voteUserName').value = currentUser;
+                document.getElementById('commentUserName').value = currentUser;
+                showAffirmationScreen();
+            }
+        });
+        
+        function showAffirmationScreen() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('affirmationScreen').style.display = 'block';
+            startTimer();
+        }
+        
+        function startTimer() {
+            let seconds = 8; // Reducido para mejor experiencia
+            const countdownEl = document.getElementById('countdown');
+            const timerEl = document.getElementById('timer');
+            
+            // Mostrar el timer después de que aparezca el texto
+            setTimeout(() => {
+                timerEl.style.opacity = '1';
+                timerEl.style.transform = 'translateY(0)';
+            }, 2000);
+            
+            timerInterval = setInterval(() => {
+                seconds--;
+                countdownEl.textContent = seconds;
+                
+                // Efecto visual cuando queda poco tiempo
+                if (seconds <= 3) {
+                    countdownEl.style.color = '#ff6b6b';
+                    countdownEl.style.transform = 'scale(1.1)';
+                }
+                
+                if (seconds <= 0) {
+                    clearInterval(timerInterval);
+                    showVoteButtons();
+                }
+            }, 1000);
+        }
+        
+        function showVoteButtons() {
+            document.getElementById('timer').style.display = 'none';
+            document.getElementById('voteButtons').style.display = 'block';
+        }
+        
+        // Manejar formulario de voto
+        document.getElementById('voteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(() => {
+                setTimeout(showCommentPopup, 1000);
+            });
+        });
+        
+        function showCommentPopup() {
+            document.getElementById('commentPopup').classList.add('show');
+        }
+        
+        // Manejar formulario de comentario
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    hideCommentPopup();
+                    // Recargar la página para mostrar el comentario actualizado
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                }
+            });
+        });
+        
+        function skipComment() {
+            hideCommentPopup();
+            setTimeout(showDashboard, 500);
+        }
+        
+        function hideCommentPopup() {
+            document.getElementById('commentPopup').classList.remove('show');
+        }
+        
+        function showDashboard() {
+            document.getElementById('affirmationScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+    </script>
+</body>
+</html> 
