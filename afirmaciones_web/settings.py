@@ -53,7 +53,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Para servir archivos estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',  # Middleware CSRF estándar
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -144,3 +144,71 @@ if not DEBUG:
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# Configuraciones de CSRF para mejor compatibilidad móvil
+CSRF_COOKIE_HTTPONLY = False  # Permitir acceso desde JavaScript
+CSRF_COOKIE_SAMESITE = 'Lax'  # Más flexible para móviles
+CSRF_COOKIE_NAME = 'csrftoken'  # Nombre explícito de la cookie
+CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  # Header para el token
+CSRF_TOKEN_TIMEOUT = None  # Sin timeout para debugging
+CSRF_FAILURE_VIEW = 'afirmaciones.views.csrf_failure'  # Vista personalizada para errores CSRF
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.railway.app',
+    'https://*.vercel.app', 
+    'https://*.herokuapp.com',
+    'https://*.render.com',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:8001',
+    'http://127.0.0.1:8002',
+    'http://localhost:8000',
+    'http://localhost:8001',
+    'http://localhost:8002',
+]
+
+# Configuración para desarrollo local
+if DEBUG:
+    CSRF_COOKIE_SECURE = False
+    CSRF_USE_SESSIONS = False
+    # Forzar que se establezca la cookie CSRF
+    CSRF_COOKIE_AGE = None  # Sin expiración para debugging
+else:
+    CSRF_COOKIE_SECURE = True
+
+# Configuración de logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose' if DEBUG else 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'afirmaciones_web.middleware': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'WARNING',
+            'propagate': False,
+        },
+    },
+}

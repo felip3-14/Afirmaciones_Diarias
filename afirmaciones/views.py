@@ -4,6 +4,7 @@ from .models import Comentario, Voto
 from django.db.models import Count
 from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 import os
 import time
@@ -42,6 +43,7 @@ def get_daily_affirmation():
     # Si todas han sido usadas recientemente, usar la primera
     return affirmations[0]
 
+@ensure_csrf_cookie
 def index(request):
     afirmacion_texto = get_daily_affirmation()
     
@@ -288,6 +290,7 @@ def debug_comentarios(request):
         ]
     }, indent=2)
 
+@ensure_csrf_cookie
 def test_comentarios(request):
     """Vista simple para probar comentarios"""
     afirmacion_texto = get_daily_affirmation()
@@ -343,6 +346,79 @@ def test_comentarios(request):
                     return JsonResponse({'success': False, 'mensaje': mensaje})
 
     return render(request, 'afirmaciones/test.html', {
+        'afirmacion': afirmacion_texto,
+        'comentarios': comentarios,
+        'mensaje': mensaje,
+    })
+
+def csrf_failure(request, reason=""):
+    """Vista personalizada para errores CSRF con debugging"""
+    print(f"🚨 CSRF FAILURE: {reason}")
+    print(f"🚨 Request path: {request.path}")
+    print(f"🚨 Request method: {request.method}")
+    print(f"🚨 User agent: {request.META.get('HTTP_USER_AGENT', 'N/A')}")
+    print(f"🚨 Cookies: {list(request.COOKIES.keys())}")
+    print(f"🚨 CSRF cookie: {request.COOKIES.get('csrftoken', 'NOT_FOUND')}")
+    print(f"🚨 POST data: {list(request.POST.keys())}")
+    print(f"🚨 Headers: {dict(request.headers)}")
+    
+    # Si es AJAX, devolver JSON
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': False,
+            'error': 'csrf_failed',
+            'mensaje': f'Error CSRF: {reason}. Recargando página...',
+            'debug_info': {
+                'reason': str(reason),
+                'path': request.path,
+                'cookies': list(request.COOKIES.keys()),
+                'csrf_cookie_present': 'csrftoken' in request.COOKIES,
+                'post_token_present': 'csrfmiddlewaretoken' in request.POST
+            },
+            'action': 'reload'
+        }, status=403)
+    
+    # Para formularios normales, redirigir con mensaje
+    from django.contrib import messages
+    messages.error(request, f'Error de seguridad: {reason}. Por favor, inténtalo de nuevo.')
+    return redirect(request.path)
+
+@ensure_csrf_cookie
+def simple_test(request):
+    """Vista súper simple para probar CSRF sin complicaciones"""
+    afirmacion_texto = get_daily_affirmation()
+    comentarios = Comentario.objects.filter(afirmacion_texto=afirmacion_texto).order_by('-fecha_creacion') if afirmacion_texto else []
+    mensaje = None
+
+    if request.method == 'POST' and afirmacion_texto:
+        print(f"🔥 SIMPLE TEST - POST recibido")
+        print(f"🔥 POST data: {dict(request.POST)}")
+        print(f"🔥 Cookies: {dict(request.COOKIES)}")
+        
+        if 'comentario' in request.POST:
+            nombre = request.POST.get('nombre_comentario', '').strip()
+            texto = request.POST.get('comentario', '').strip()
+            
+            print(f"🔥 Procesando comentario: {nombre} - {texto[:50]}...")
+            
+            if nombre and texto:
+                try:
+                    nuevo_comentario = Comentario.objects.create(
+                        nombre_usuario=nombre,
+                        afirmacion_texto=afirmacion_texto,
+                        texto=texto
+                    )
+                    print(f"🔥 ¡Comentario creado exitosamente! ID: {nuevo_comentario.id}")
+                    mensaje = f'¡Comentario guardado exitosamente! ID: {nuevo_comentario.id}'
+                    # Recargar comentarios
+                    comentarios = Comentario.objects.filter(afirmacion_texto=afirmacion_texto).order_by('-fecha_creacion')
+                except Exception as e:
+                    print(f"🔥 ERROR creando comentario: {e}")
+                    mensaje = f'Error al guardar: {e}'
+            else:
+                mensaje = 'Por favor, completa todos los campos.'
+
+    return render(request, 'afirmaciones/simple_test.html', {
         'afirmacion': afirmacion_texto,
         'comentarios': comentarios,
         'mensaje': mensaje,

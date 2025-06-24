@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF Test Simple</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; }
+        form { background: #f0f0f0; padding: 2rem; border-radius: 10px; max-width: 500px; }
+        input, textarea, button { width: 100%; padding: 0.5rem; margin: 0.5rem 0; }
+        button { background: #007cba; color: white; border: none; cursor: pointer; }
+        .result { margin: 1rem 0; padding: 1rem; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Prueba CSRF Súper Simple</h1>
+    
+    <h2>Información de Debug:</h2>
+    <ul>
+        <li><strong>Afirmación:</strong> {{ afirmacion|default:"No disponible" }}</li>
+        <li><strong>Total comentarios:</strong> {{ comentarios|length }}</li>
+        <li><strong>Mensaje:</strong> {{ mensaje|default:"Ninguno" }}</li>
+    </ul>
+    
+    <form method="post">
+        {% csrf_token %}
+        <h3>Enviar Comentario:</h3>
+        <input type="text" name="nombre_comentario" placeholder="Tu nombre" value="TestUser" required>
+        <textarea name="comentario" placeholder="Tu comentario..." required>Este es un comentario de prueba muy simple</textarea>
+        <button type="submit">📤 Enviar (Método Tradicional)</button>
+    </form>
+    
+    <div class="result">
+        {% if mensaje %}
+            <div class="success">✅ {{ mensaje }}</div>
+        {% endif %}
+    </div>
+    
+    <h3>💬 Comentarios Existentes:</h3>
+    {% for comment in comentarios %}
+        <div style="border: 1px solid #ddd; padding: 1rem; margin: 0.5rem 0;">
+            <strong>{{ comment.nombre_usuario }}</strong>: {{ comment.texto }}
+            <br><small>{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</small>
+        </div>
+    {% empty %}
+        <p>No hay comentarios aún.</p>
+    {% endfor %}
+    
+    <p><a href="/test/">← Volver a prueba completa</a> | <a href="/">← App principal</a></p>
+</body>
+</html> 

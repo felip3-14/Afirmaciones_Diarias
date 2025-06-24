@@ -526,11 +526,53 @@
                 clearTimeout(timeoutId);
                 console.error('📱 Error AJAX:', error);
                 
-                // Si falla AJAX, usar envío tradicional
-                showErrorMessage('Reintentando envío...');
-                setTimeout(() => {
-                    submitFormFallback(formData);
-                }, 1000);
+                // Si es error CSRF, intentar recargar token y reintentar
+                if (error.message.includes('403') || error.message.includes('CSRF')) {
+                    console.log('📱 Error CSRF detectado, intentando solucionarlo...');
+                    
+                    // Intentar obtener nuevo token
+                    fetch(window.location.href)
+                        .then(response => response.text())
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            const newToken = doc.querySelector('[name="csrfmiddlewaretoken"]')?.value;
+                            
+                            if (newToken) {
+                                console.log('📱 Nuevo token CSRF obtenido');
+                                // Actualizar token en el formulario actual
+                                const currentTokenInput = document.querySelector('[name="csrfmiddlewaretoken"]');
+                                if (currentTokenInput) {
+                                    currentTokenInput.value = newToken;
+                                }
+                                
+                                // Mostrar mensaje y usar fallback
+                                showErrorMessage('Reintentando con nueva configuración de seguridad...');
+                                setTimeout(() => {
+                                    submitFormFallback(formData);
+                                }, 2000);
+                            } else {
+                                console.log('📱 No se pudo obtener nuevo token, usando fallback directo');
+                                showErrorMessage('Reintentando envío...');
+                                setTimeout(() => {
+                                    submitFormFallback(formData);
+                                }, 1000);
+                            }
+                        })
+                        .catch(() => {
+                            console.log('📱 Error obteniendo nuevo token, usando fallback');
+                            showErrorMessage('Reintentando envío...');
+                            setTimeout(() => {
+                                submitFormFallback(formData);
+                            }, 1000);
+                        });
+                } else {
+                    // Si falla AJAX por otra razón, usar envío tradicional
+                    showErrorMessage('Reintentando envío...');
+                    setTimeout(() => {
+                        submitFormFallback(formData);
+                    }, 1000);
+                }
             })
             .finally(() => {
                 // Rehabilitar botón
