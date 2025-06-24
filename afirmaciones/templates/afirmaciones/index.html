@@ -428,29 +428,190 @@
             document.getElementById('commentPopup').classList.add('show');
         }
         
-        // Manejar formulario de comentario
+        // Función para obtener el token CSRF de forma más robusta
+        function getCSRFToken() {
+            // Intentar múltiples métodos para obtener el token
+            let token = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            if (!token) {
+                token = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
+            }
+            if (!token) {
+                // Buscar en cookies
+                const cookieValue = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('csrftoken='))
+                    ?.split('=')[1];
+                token = cookieValue;
+            }
+            return token;
+        }
+        
+        // Manejar formulario de comentario - VERSIÓN MEJORADA
         document.getElementById('commentForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            const textarea = this.querySelector('textarea[name="comentario"]');
+            const comentarioText = textarea.value.trim();
+            
+            // Debug info
+            console.log('📱 Iniciando envío de comentario...');
+            console.log('📱 User Agent:', navigator.userAgent);
+            console.log('📱 Texto comentario:', comentarioText.substring(0, 50));
+            
+            // Validación client-side
+            if (!comentarioText) {
+                alert('Por favor, escribe un mensaje antes de enviar.');
+                return;
+            }
+            
+            if (comentarioText.length < 3) {
+                alert('El mensaje debe tener al menos 3 caracteres.');
+                return;
+            }
+            
+            // Deshabilitar botón durante envío
+            submitButton.disabled = true;
+            submitButton.textContent = '⏳ Enviando...';
+            
             const formData = new FormData(this);
+            const csrfToken = getCSRFToken();
+            
+            console.log('📱 CSRF Token encontrado:', csrfToken ? 'SÍ' : 'NO');
+            
+            // Intentar envío AJAX primero
+            const timeoutId = setTimeout(() => {
+                console.log('📱 Timeout AJAX, usando fallback');
+                submitFormFallback(formData);
+            }, 15000); // 15 segundos timeout para móviles
             
             fetch('', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                    'X-Requested-With': 'XMLHttpRequest'
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 }
-            }).then(response => response.json())
+            })
+            .then(response => {
+                clearTimeout(timeoutId);
+                console.log('📱 Respuesta HTTP:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`Error de red: ${response.status} ${response.statusText}`);
+                }
+                
+                // Verificar si es JSON o HTML
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    return response.json();
+                } else {
+                    throw new Error('Respuesta no es JSON, usando fallback');
+                }
+            })
             .then(data => {
+                console.log('📱 Respuesta JSON:', data);
                 if (data.success) {
+                    showSuccessMessage('¡Comentario enviado con éxito! 🌟');
                     hideCommentPopup();
-                    // Recargar la página para mostrar el comentario actualizado
                     setTimeout(() => {
                         window.location.reload();
-                    }, 500);
+                    }, 1000);
+                } else {
+                    throw new Error(data.mensaje || 'Error al enviar comentario');
                 }
+            })
+            .catch(error => {
+                clearTimeout(timeoutId);
+                console.error('📱 Error AJAX:', error);
+                
+                // Si falla AJAX, usar envío tradicional
+                showErrorMessage('Reintentando envío...');
+                setTimeout(() => {
+                    submitFormFallback(formData);
+                }, 1000);
+            })
+            .finally(() => {
+                // Rehabilitar botón
+                submitButton.disabled = false;
+                submitButton.textContent = '✨ Compartir positividad';
             });
         });
+        
+        // Función de fallback para envío tradicional - MEJORADA
+        function submitFormFallback(formData) {
+            console.log('📱 Usando método de fallback (envío tradicional)');
+            
+            // Crear formulario oculto para envío tradicional
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '';
+            form.style.display = 'none';
+            
+            // Agregar todos los campos del FormData
+            for (let [key, value] of formData.entries()) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                form.appendChild(input);
+            }
+            
+            // Asegurarse de que el CSRF token esté incluido
+            const csrfToken = getCSRFToken();
+            if (csrfToken) {
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+            }
+            
+            // Agregar indicador de que es fallback
+            const fallbackInput = document.createElement('input');
+            fallbackInput.type = 'hidden';
+            fallbackInput.name = 'fallback_submit';
+            fallbackInput.value = '1';
+            form.appendChild(fallbackInput);
+            
+            document.body.appendChild(form);
+            console.log('📱 Enviando formulario tradicional...');
+            form.submit();
+        }
+        
+        // Mostrar mensajes de éxito/error - MEJORADOS
+        function showSuccessMessage(message) {
+            console.log('📱 Mostrando mensaje de éxito:', message);
+            const popup = document.getElementById('commentPopup');
+            const originalContent = popup.innerHTML;
+            popup.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="color: #4CAF50;">✅ ${message}</h3>
+                    <p style="margin-top: 1rem;">Redirigiendo...</p>
+                </div>
+            `;
+            setTimeout(() => {
+                popup.innerHTML = originalContent;
+            }, 3000);
+        }
+        
+        function showErrorMessage(message) {
+            console.log('📱 Mostrando mensaje de error:', message);
+            const popup = document.getElementById('commentPopup');
+            const originalContent = popup.innerHTML;
+            popup.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h3 style="color: #ff6b6b;">⚠️ ${message}</h3>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        Si el problema persiste, por favor recarga la página.
+                    </p>
+                </div>
+            `;
+            setTimeout(() => {
+                popup.innerHTML = originalContent;
+            }, 5000);
+        }
         
         function skipComment() {
             hideCommentPopup();

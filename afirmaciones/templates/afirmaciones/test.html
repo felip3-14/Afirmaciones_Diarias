@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Comentarios</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2rem; background: #f0f0f0; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: 10px; }
+        input, textarea, button { width: 100%; padding: 1rem; margin: 0.5rem 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #007cba; color: white; cursor: pointer; }
+        button:hover { background: #005a87; }
+        .result { margin: 1rem 0; padding: 1rem; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Test de Comentarios</h1>
+        <p>Esta página te permite probar el sistema de comentarios de forma simple.</p>
+        
+        <div class="info">
+            <strong>Afirmación actual:</strong> {{ afirmacion|default:"No hay afirmación disponible" }}
+        </div>
+        
+        <form id="testForm">
+            {% csrf_token %}
+            <input type="text" name="nombre_comentario" placeholder="Tu nombre" required>
+            <textarea name="comentario" rows="3" placeholder="Tu comentario positivo..." required></textarea>
+            <button type="submit">📤 Enviar Comentario</button>
+        </form>
+        
+        <div id="result"></div>
+        
+        <h3>💬 Comentarios Existentes:</h3>
+        <div id="comments">
+            {% for comment in comentarios %}
+                <div style="border: 1px solid #ddd; padding: 1rem; margin: 0.5rem 0; border-radius: 5px;">
+                    <strong>{{ comment.nombre_usuario }}</strong>: {{ comment.texto }}
+                    <br><small>{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</small>
+                </div>
+            {% empty %}
+                <p>No hay comentarios aún.</p>
+            {% endfor %}
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="/" style="color: #007cba;">← Volver a la app principal</a>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            const submitButton = this.querySelector('button');
+            const formData = new FormData(this);
+            
+            // Mostrar estado de carga
+            resultDiv.innerHTML = '<div class="info">⏳ Enviando comentario...</div>';
+            submitButton.disabled = true;
+            
+            // Intentar envío AJAX
+            fetch('', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ ${data.mensaje}</div>`;
+                    this.reset();
+                    setTimeout(() => location.reload(), 2000);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ ${data.mensaje}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultDiv.innerHTML = `<div class="error">❌ Error: ${error.message}<br><small>Reintentando con método tradicional...</small></div>`;
+                
+                // Fallback: envío tradicional
+                setTimeout(() => {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '';
+                    
+                    for (let [key, value] of formData.entries()) {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = key;
+                        input.value = value;
+                        form.appendChild(input);
+                    }
+                    
+                    document.body.appendChild(form);
+                    form.submit();
+                }, 2000);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html> 
