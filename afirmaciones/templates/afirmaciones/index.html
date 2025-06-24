@@ -58,17 +58,95 @@
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             width: 90%;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 3rem;
+            padding: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
             position: relative;
             overflow: hidden;
+        }
+        
+        /* Estilos base para desktop */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 1000px;
+                padding: 4rem;
+            }
+            
+            .welcome-screen h1 {
+                font-size: 3.5rem;
+                margin-bottom: 2rem;
+            }
+            
+            .welcome-screen p {
+                font-size: 1.5rem;
+                margin-bottom: 3rem;
+            }
+            
+            .affirmation-text {
+                font-size: 3rem;
+                margin: 3rem 0;
+                line-height: 1.3;
+            }
+            
+            .timer {
+                font-size: 1.8rem;
+                margin: 2rem 0;
+            }
+            
+            .vote-buttons h3 {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .vote-buttons button {
+                font-size: 1.8rem;
+                padding: 1.2rem 2.5rem;
+                margin: 0.8rem;
+            }
+            
+            input[type="text"] {
+                font-size: 1.3rem;
+                padding: 1.5rem;
+                max-width: 400px;
+                margin: 1rem auto;
+            }
+            
+            button, input[type="submit"] {
+                font-size: 1.3rem;
+                padding: 1.2rem 2.5rem;
+                margin: 1.5rem 1rem;
+            }
+            
+            .dashboard h2 {
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+            }
+            
+            .comment-card {
+                padding: 2rem;
+                margin: 1.5rem 0;
+                font-size: 1.1rem;
+            }
+            
+            .comment-card strong {
+                font-size: 1.3rem;
+            }
+            
+            .comment-card .comment-text {
+                font-size: 1.2rem;
+                margin: 1rem 0;
+            }
+            
+            textarea {
+                font-size: 1.2rem;
+                padding: 1.5rem;
+            }
         }
         
         .container::before {
@@ -82,166 +160,139 @@
             pointer-events: none;
         }
         
-        /* Pantalla de consentimiento de cookies */
+        /* Pantalla de consentimiento de cookies - SIMPLE */
         .cookie-consent-screen {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
             padding: 2rem;
-            overflow-y: auto;
         }
         
         .consent-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 3rem;
-            border-radius: 20px;
-            max-width: 700px;
-            width: 90%;
-            max-height: 85vh;
-            overflow-y: auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid #ddd;
             color: #333;
-            margin: auto;
         }
         
         .consent-content h1 {
-            color: #2c3e50;
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            text-shadow: none;
-            line-height: 1.2;
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
         }
         
-        .consent-message {
-            text-align: left;
+        .consent-content p {
+            color: #666;
             margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-        
-        .consent-message p {
-            color: #2c3e50;
-            margin-bottom: 1.2rem;
-            line-height: 1.6;
-        }
-        
-        .consent-message strong {
-            color: #34495e;
-            font-size: 1.15rem;
-        }
-        
-        .consent-message ul {
-            color: #2c3e50;
-            text-align: left;
-            margin: 1.5rem 0;
-            padding-left: 2rem;
-        }
-        
-        .consent-message li {
-            margin-bottom: 0.8rem;
-            line-height: 1.6;
-            font-size: 1.05rem;
+            line-height: 1.5;
+            font-size: 1rem;
         }
         
         .consent-buttons {
-            margin: 2rem 0 1.5rem 0;
             display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
         .accept-btn {
-            background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
-            font-size: 1.3rem !important;
-            padding: 1.3rem 3rem !important;
-            min-width: 350px;
-            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3) !important;
+            background: #28a745 !important;
+            color: white !important;
+            font-size: 1.1rem !important;
+            padding: 1rem 2rem !important;
+            border: none !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            min-width: 180px;
+        }
+        
+        .accept-btn:hover {
+            background: #218838 !important;
         }
         
         .decline-btn {
-            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+            background: #dc3545 !important;
+            color: white !important;
             font-size: 1rem !important;
-            padding: 0.9rem 2rem !important;
-            min-width: 250px;
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
+            padding: 0.8rem 1.5rem !important;
+            border: none !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            font-weight: bold !important;
+            min-width: 120px;
         }
         
-        .privacy-note {
-            color: #7f8c8d;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            font-style: italic;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 1rem;
-            margin-top: 1rem;
+        .decline-btn:hover {
+            background: #c82333 !important;
         }
         
-        /* Pantalla de rechazo de cookies */
+        /* Pantalla de rechazo de cookies - SIMPLE */
         .cookie-declined-screen {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 2rem;
         }
         
         .declined-content {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 3rem;
-            border-radius: 20px;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
             max-width: 500px;
-            width: 90%;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid #ddd;
             color: #333;
         }
         
         .declined-content h1 {
-            color: #e74c3c;
-            font-size: 2rem;
+            color: #dc3545;
+            font-size: 1.8rem;
             margin-bottom: 1.5rem;
-            text-shadow: none;
+            font-weight: bold;
         }
         
         .declined-content p {
-            color: #2c3e50;
+            color: #666;
             margin-bottom: 1rem;
             line-height: 1.6;
+            font-size: 1rem;
         }
         
         .reload-btn {
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            background: #007bff;
             color: white;
             border: none;
             padding: 1rem 2rem;
-            border-radius: 25px;
+            border-radius: 5px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-top: 1rem;
         }
         
         .reload-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            background: #0056b3;
         }
         
         /* Pantalla de bienvenida */
@@ -250,14 +301,14 @@
         }
         
         .welcome-screen h1 {
-            font-size: 3rem;
+            font-size: 2.2rem;
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             animation: pulse 2s infinite;
         }
         
         .welcome-screen p {
-            font-size: 1.3rem;
+            font-size: 1.1rem;
             margin-bottom: 2rem;
             opacity: 0.9;
         }
@@ -269,7 +320,7 @@
         }
         
         .affirmation-text {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             margin: 2rem 0;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
@@ -331,6 +382,38 @@
             font-size: 1.5rem;
         }
         
+        /* Mejorar popup en desktop */
+        @media (min-width: 769px) {
+            .comment-popup {
+                max-width: 800px;
+                padding: 3rem;
+                border-radius: 20px;
+                bottom: -400px;
+            }
+            
+            .comment-popup h3 {
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .comment-popup p {
+                font-size: 1.2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .comment-popup textarea {
+                font-size: 1.2rem;
+                padding: 1.5rem;
+                min-height: 120px;
+            }
+            
+            .comment-popup button {
+                font-size: 1.2rem;
+                padding: 1rem 2rem;
+                margin: 1rem 0.5rem;
+            }
+        }
+        
         /* Dashboard de comentarios */
         .dashboard {
             display: none;
@@ -342,6 +425,50 @@
             text-align: center;
             margin-bottom: 2rem;
             font-size: 2rem;
+        }
+        
+        .daily-affirmation {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .daily-affirmation h3 {
+            color: #ffeb3b;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+        
+        .affirmation-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            line-height: 1.4;
+        }
+        
+        .comment-form-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .comment-form-section h3 {
+            color: #ffeb3b;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .comments-section {
+            margin: 2rem 0;
+        }
+        
+        .comments-section h3 {
+            color: #ffeb3b;
+            margin-bottom: 1rem;
+            text-align: center;
         }
         
         .comment-card {
@@ -431,139 +558,145 @@
             50% { transform: scale(1.05); }
         }
         
-        /* Responsive */
+        /* Responsive para móvil */
         @media (max-width: 768px) {
-            .container { padding: 2rem; }
-            .welcome-screen h1 { font-size: 2rem; }
-            .affirmation-text { font-size: 1.8rem; }
+            .container { 
+                padding: 1.5rem; 
+                width: 95%;
+            }
+            .welcome-screen h1 { font-size: 1.8rem; }
+            .welcome-screen p { font-size: 1rem; }
+            .affirmation-text { font-size: 1.6rem; }
+            .timer { font-size: 1.2rem; }
+            .vote-buttons h3 { font-size: 1.3rem; }
+            .vote-buttons button { 
+                font-size: 1.2rem; 
+                padding: 0.8rem 1.5rem;
+                margin: 0.3rem;
+            }
+            input[type="text"] { 
+                font-size: 1rem; 
+                padding: 1rem;
+            }
+            button, input[type="submit"] { 
+                font-size: 1rem; 
+                padding: 0.8rem 1.5rem;
+            }
+            .dashboard h2 { font-size: 1.8rem; }
+            .comment-card { padding: 1.5rem; }
+            textarea { font-size: 1rem; }
             
             /* Responsive para consentimiento de cookies */
-            .consent-content {
-                padding: 2rem;
+            .consent-content, .declined-content {
+                padding: 1.5rem;
                 max-width: 95%;
+                margin: 0 auto;
             }
             
-            .consent-content h1 {
-                font-size: 1.8rem;
+            .consent-content h1, .declined-content h1 {
+                font-size: 1.5rem;
             }
             
-            .consent-message {
-                text-align: center;
-            }
-            
-            .consent-message ul {
-                text-align: left;
-                padding-left: 1rem;
+            .consent-content p, .declined-content p {
+                font-size: 0.9rem;
             }
             
             .consent-buttons {
                 flex-direction: column;
-                gap: 0.8rem;
+                align-items: center;
             }
             
-            .accept-btn {
-                font-size: 1.1rem !important;
-                padding: 1rem 1.5rem !important;
+            .accept-btn, .decline-btn {
+                font-size: 1rem !important;
+                padding: 0.8rem 1rem !important;
+                width: 100%;
+                max-width: 250px;
             }
             
-            .decline-btn {
-                font-size: 0.9rem !important;
-                padding: 0.7rem 1rem !important;
+            /* Dashboard responsive */
+            .daily-affirmation {
+                padding: 1rem;
+                margin: 1rem 0;
             }
             
-            .declined-content {
-                padding: 2rem;
-                max-width: 95%;
+            .affirmation-display {
+                font-size: 1.2rem;
             }
             
-            .declined-content h1 {
-                font-size: 1.5rem;
+            .comment-form-section {
+                padding: 1rem;
+                margin: 1rem 0;
             }
         }
         
         /* Estilos específicos para pantallas grandes (PC/Desktop) */
         @media (min-width: 1024px) {
-            .consent-content {
-                max-width: 800px;
-                padding: 4rem;
+            .consent-content, .declined-content {
+                max-width: 600px;
+                padding: 3rem;
             }
             
-            .consent-content h1 {
-                font-size: 3rem;
-                margin-bottom: 2rem;
-            }
-            
-            .consent-message {
-                font-size: 1.2rem;
-                margin-bottom: 2.5rem;
-            }
-            
-            .consent-message p {
+            .consent-content h1, .declined-content h1 {
+                font-size: 2.2rem;
                 margin-bottom: 1.5rem;
             }
             
-            .consent-message strong {
-                font-size: 1.3rem;
-            }
-            
-            .consent-message li {
-                font-size: 1.15rem;
-                margin-bottom: 1rem;
+            .consent-content p, .declined-content p {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
             }
             
             .consent-buttons {
                 flex-direction: row;
                 justify-content: center;
-                gap: 2rem;
-                margin: 3rem 0 2rem 0;
+                gap: 1.5rem;
             }
             
             .accept-btn {
-                font-size: 1.4rem !important;
-                padding: 1.5rem 4rem !important;
-                min-width: 400px;
+                font-size: 1.2rem !important;
+                padding: 1rem 2rem !important;
+                width: auto;
+                min-width: 200px;
             }
             
             .decline-btn {
-                font-size: 1.1rem !important;
-                padding: 1rem 2.5rem !important;
-                min-width: 280px;
+                font-size: 1rem !important;
+                padding: 0.8rem 1.5rem !important;
+                width: auto;
+                min-width: 150px;
             }
             
-            .privacy-note {
-                font-size: 1rem;
-                margin-top: 1.5rem;
-                padding-top: 1.5rem;
+            /* Dashboard desktop */
+            .daily-affirmation {
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+            
+            .affirmation-display {
+                font-size: 1.8rem;
+            }
+            
+            .comment-form-section {
+                padding: 2rem;
+                margin: 2rem 0;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Pantalla de consentimiento de cookies -->
-        <div class="cookie-consent-screen" id="cookieConsentScreen">
+        <!-- Pantalla de consentimiento de cookies SIMPLIFICADA -->
+        <div class="cookie-consent-screen" id="cookieConsentScreen" style="display: flex;">
             <div class="consent-content">
-                <h1>🍪 ¡Hola! Bienvenido a Afirmaciones Diarias</h1>
-                <div class="consent-message">
-                    <p>Para que puedas participar y compartir tu energía positiva, necesitamos tu consentimiento para usar cookies de seguridad.</p>
-                    <p><strong>¿Por qué necesitamos cookies?</strong></p>
-                    <ul>
-                        <li>🔒 Para proteger tus comentarios y votos</li>
-                        <li>✨ Para que puedas interactuar de forma segura</li>
-                        <li>📱 Para que la app funcione correctamente en tu dispositivo</li>
-                    </ul>
-                    <p>Sin estas cookies, la aplicación no podrá funcionar correctamente.</p>
-                </div>
+                <h1>🍪 Cookies Necesarias</h1>
+                <p>Esta app necesita cookies para funcionar correctamente y proteger tus comentarios.</p>
                 <div class="consent-buttons">
                     <button onclick="acceptCookies()" class="accept-btn">
-                        ✅ Acepto las cookies y quiero continuar
+                        ✅ Aceptar y Continuar
                     </button>
                     <button onclick="declineCookies()" class="decline-btn">
-                        ❌ No acepto
+                        ❌ Rechazar
                     </button>
-                </div>
-                <div class="privacy-note">
-                    <small>Solo usamos cookies esenciales para el funcionamiento. No compartimos tu información con terceros.</small>
                 </div>
             </div>
         </div>
@@ -593,7 +726,7 @@
         </div>
         
         <!-- Pantalla de afirmación -->
-        <div class="affirmation-screen" id="affirmationScreen">
+        <div class="affirmation-screen" id="affirmationScreen" style="display: none;">
             <h2>Tu afirmación de hoy</h2>
             <div class="affirmation-text" id="affirmationText">
                 {% if afirmacion %}{{ afirmacion }}{% endif %}
@@ -613,30 +746,52 @@
         </div>
         
         <!-- Dashboard de comentarios -->
-        <div class="dashboard" id="dashboard">
-            <h2>💬 Mensajes Positivos del Día</h2>
+        <div class="dashboard" id="dashboard" style="display: none;">
+            <h2>✨ Afirmaciones Diarias ✨</h2>
+            
+            <!-- Afirmación del día -->
+            <div class="daily-affirmation">
+                <h3>Tu afirmación de hoy:</h3>
+                <div class="affirmation-display">
+                    {% if afirmacion %}{{ afirmacion }}{% endif %}
+                </div>
+            </div>
+            
+            <!-- Formulario de comentarios simplificado -->
+            <div class="comment-form-section">
+                <h3>💭 Comparte tu energía positiva</h3>
+                <form method="post" id="simpleCommentForm">
+                    {% csrf_token %}
+                    <input type="text" name="nombre_comentario" placeholder="Tu nombre" required style="margin-bottom: 1rem;">
+                    <textarea name="comentario" rows="3" placeholder="Escribe tu mensaje positivo aquí..." required></textarea>
+                    <button type="submit">✨ Compartir Positividad</button>
+                </form>
+            </div>
+            
+            <!-- Comentarios existentes -->
+            <div class="comments-section">
+                <h3>💬 Mensajes de hoy</h3>
+                <div id="commentsContainer">
+                    {% for comment in comentarios %}
+                        <div class="comment-card">
+                            <strong>{{ comment.nombre_usuario }}</strong>
+                            <div class="comment-text">{{ comment.texto }}</div>
+                            <div class="comment-time">{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</div>
+                        </div>
+                    {% empty %}
+                        <div class="comment-card">
+                            <div class="comment-text">¡Sé el primero en compartir un mensaje positivo hoy! 🌟</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
             
             <!-- Botón de Compartir -->
             <div style="text-align: center; margin: 2rem 0;">
-                <button onclick="shareApp()" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); font-size: 1.2rem;">
-                    📱 ¡Comparte esta app con tus amigos!
+                <button onclick="shareApp()" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); font-size: 1.1rem;">
+                    📱 ¡Comparte esta app!
                 </button>
             </div>
-            
-            <div id="commentsContainer">
-                {% for comment in comentarios %}
-                    <div class="comment-card">
-                        <strong>{{ comment.nombre_usuario }}</strong>
-                        <div class="comment-text">{{ comment.texto }}</div>
-                        <div class="comment-time">{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</div>
-                    </div>
-                {% empty %}
-                    <div class="comment-card">
-                        <div class="comment-text">¡Sé el primero en compartir un mensaje positivo hoy! 🌟</div>
-                    </div>
-                {% endfor %}
-            </div>
-            <button onclick="location.reload()">🔄 Nueva sesión</button>
         </div>
     </div>
     
@@ -659,12 +814,36 @@
         let timerInterval;
         let cookiesAccepted = false;
         
+        // Función de debug temporal - REMOVER EN PRODUCCIÓN
+        function resetApp() {
+            localStorage.clear();
+            location.reload();
+        }
+        
+        // Agregar botón de debug temporal al body
+        window.addEventListener('load', function() {
+            const debugBtn = document.createElement('button');
+            debugBtn.textContent = '🔧 Debug: Reset App';
+            debugBtn.style.position = 'fixed';
+            debugBtn.style.top = '10px';
+            debugBtn.style.right = '10px';
+            debugBtn.style.zIndex = '9999';
+            debugBtn.style.background = '#ff4444';
+            debugBtn.style.color = 'white';
+            debugBtn.style.border = 'none';
+            debugBtn.style.padding = '10px';
+            debugBtn.style.borderRadius = '5px';
+            debugBtn.style.fontSize = '12px';
+            debugBtn.onclick = resetApp;
+            document.body.appendChild(debugBtn);
+        });
+        
         // Verificar si ya se aceptaron las cookies anteriormente
         function checkCookieConsent() {
             const consent = localStorage.getItem('cookieConsent');
             if (consent === 'accepted') {
                 cookiesAccepted = true;
-                showWelcomeScreen();
+                showDashboard();
                 return true;
             }
             return false;
@@ -679,17 +858,8 @@
             // Ocultar pantalla de consentimiento
             document.getElementById('cookieConsentScreen').style.display = 'none';
             
-            // Forzar la creación de la cookie CSRF
-            fetch(window.location.href, {
-                method: 'GET',
-                credentials: 'include'
-            }).then(() => {
-                console.log('🍪 Cookie CSRF inicializada');
-                showWelcomeScreen();
-            }).catch(() => {
-                console.log('🍪 Continuando sin inicialización CSRF');
-                showWelcomeScreen();
-            });
+            // Ir directo al dashboard con formulario de comentarios
+            showDashboard();
         }
         
         // Rechazar cookies
@@ -710,11 +880,19 @@
         // Inicializar la app
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Iniciando app...');
+            console.log('🚀 URL actual:', window.location.href);
+            console.log('🚀 User Agent:', navigator.userAgent);
+            
+            // Verificar estado actual del localStorage
+            const currentConsent = localStorage.getItem('cookieConsent');
+            console.log('🍪 Estado actual del consentimiento:', currentConsent);
             
             // Si no hay consentimiento previo, mostrar pantalla de cookies
             if (!checkCookieConsent()) {
                 console.log('🍪 Mostrando pantalla de consentimiento');
                 document.getElementById('cookieConsentScreen').style.display = 'flex';
+            } else {
+                console.log('🍪 Consentimiento ya otorgado, mostrando bienvenida');
             }
         });
         
@@ -1040,8 +1218,93 @@
         }
         
         function showDashboard() {
+            document.getElementById('cookieConsentScreen').style.display = 'none';
+            document.getElementById('cookieDeclinedScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('affirmationScreen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
+            
+            // Configurar el formulario simplificado
+            setupSimpleCommentForm();
+        }
+        
+        // Configurar formulario de comentarios simplificado
+        function setupSimpleCommentForm() {
+            const form = document.getElementById('simpleCommentForm');
+            if (!form) return;
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!cookiesAccepted) {
+                    alert('Error: Se necesitan cookies para enviar comentarios.');
+                    return;
+                }
+                
+                const submitButton = this.querySelector('button[type="submit"]');
+                const nameInput = this.querySelector('input[name="nombre_comentario"]');
+                const textarea = this.querySelector('textarea[name="comentario"]');
+                
+                const nombre = nameInput.value.trim();
+                const comentario = textarea.value.trim();
+                
+                if (!nombre || !comentario) {
+                    alert('Por favor, completa todos los campos.');
+                    return;
+                }
+                
+                if (comentario.length < 3) {
+                    alert('El comentario debe tener al menos 3 caracteres.');
+                    return;
+                }
+                
+                // Deshabilitar botón
+                submitButton.disabled = true;
+                submitButton.textContent = '⏳ Enviando...';
+                
+                // Crear formulario tradicional para envío directo
+                const hiddenForm = document.createElement('form');
+                hiddenForm.method = 'POST';
+                hiddenForm.action = '';
+                hiddenForm.style.display = 'none';
+                
+                // CSRF Token
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = 'csrfmiddlewaretoken';
+                csrfInput.value = document.querySelector('[name="csrfmiddlewaretoken"]').value;
+                hiddenForm.appendChild(csrfInput);
+                
+                // Nombre
+                const nameHiddenInput = document.createElement('input');
+                nameHiddenInput.type = 'hidden';
+                nameHiddenInput.name = 'nombre_comentario';
+                nameHiddenInput.value = nombre;
+                hiddenForm.appendChild(nameHiddenInput);
+                
+                // Comentario
+                const commentHiddenInput = document.createElement('input');
+                commentHiddenInput.type = 'hidden';
+                commentHiddenInput.name = 'comentario';
+                commentHiddenInput.value = comentario;
+                hiddenForm.appendChild(commentHiddenInput);
+                
+                // Indicador de envío directo
+                const directInput = document.createElement('input');
+                directInput.type = 'hidden';
+                directInput.name = 'direct_submit';
+                directInput.value = '1';
+                hiddenForm.appendChild(directInput);
+                
+                document.body.appendChild(hiddenForm);
+                
+                console.log('📝 Enviando comentario directamente:', {
+                    nombre: nombre,
+                    comentario: comentario.substring(0, 50)
+                });
+                
+                hiddenForm.submit();
+            });
         }
         
         // Función para compartir la app
