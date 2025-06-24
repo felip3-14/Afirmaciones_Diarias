@@ -94,6 +94,8 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            padding: 2rem;
+            overflow-y: auto;
         }
         
         .consent-content {
@@ -101,67 +103,87 @@
             backdrop-filter: blur(20px);
             padding: 3rem;
             border-radius: 20px;
-            max-width: 600px;
+            max-width: 700px;
             width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
             text-align: center;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
             color: #333;
+            margin: auto;
         }
         
         .consent-content h1 {
             color: #2c3e50;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 1.5rem;
             text-shadow: none;
+            line-height: 1.2;
         }
         
         .consent-message {
             text-align: left;
             margin-bottom: 2rem;
+            font-size: 1.1rem;
         }
         
         .consent-message p {
             color: #2c3e50;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             line-height: 1.6;
+        }
+        
+        .consent-message strong {
+            color: #34495e;
+            font-size: 1.15rem;
         }
         
         .consent-message ul {
             color: #2c3e50;
             text-align: left;
-            margin: 1rem 0;
-            padding-left: 1.5rem;
+            margin: 1.5rem 0;
+            padding-left: 2rem;
         }
         
         .consent-message li {
-            margin-bottom: 0.5rem;
-            line-height: 1.5;
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+            font-size: 1.05rem;
         }
         
         .consent-buttons {
-            margin-bottom: 1.5rem;
+            margin: 2rem 0 1.5rem 0;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.2rem;
+            align-items: center;
         }
         
         .accept-btn {
             background: linear-gradient(45deg, #27ae60, #2ecc71) !important;
-            font-size: 1.2rem !important;
-            padding: 1.2rem 2rem !important;
+            font-size: 1.3rem !important;
+            padding: 1.3rem 3rem !important;
+            min-width: 350px;
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.3) !important;
         }
         
         .decline-btn {
             background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
             font-size: 1rem !important;
-            padding: 0.8rem 1.5rem !important;
+            padding: 0.9rem 2rem !important;
+            min-width: 250px;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3) !important;
         }
         
         .privacy-note {
             color: #7f8c8d;
-            font-size: 0.85rem;
-            line-height: 1.4;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            font-style: italic;
+            border-top: 1px solid #ecf0f1;
+            padding-top: 1rem;
+            margin-top: 1rem;
         }
         
         /* Pantalla de rechazo de cookies */
@@ -456,6 +478,62 @@
             
             .declined-content h1 {
                 font-size: 1.5rem;
+            }
+        }
+        
+        /* Estilos específicos para pantallas grandes (PC/Desktop) */
+        @media (min-width: 1024px) {
+            .consent-content {
+                max-width: 800px;
+                padding: 4rem;
+            }
+            
+            .consent-content h1 {
+                font-size: 3rem;
+                margin-bottom: 2rem;
+            }
+            
+            .consent-message {
+                font-size: 1.2rem;
+                margin-bottom: 2.5rem;
+            }
+            
+            .consent-message p {
+                margin-bottom: 1.5rem;
+            }
+            
+            .consent-message strong {
+                font-size: 1.3rem;
+            }
+            
+            .consent-message li {
+                font-size: 1.15rem;
+                margin-bottom: 1rem;
+            }
+            
+            .consent-buttons {
+                flex-direction: row;
+                justify-content: center;
+                gap: 2rem;
+                margin: 3rem 0 2rem 0;
+            }
+            
+            .accept-btn {
+                font-size: 1.4rem !important;
+                padding: 1.5rem 4rem !important;
+                min-width: 400px;
+            }
+            
+            .decline-btn {
+                font-size: 1.1rem !important;
+                padding: 1rem 2.5rem !important;
+                min-width: 280px;
+            }
+            
+            .privacy-note {
+                font-size: 1rem;
+                margin-top: 1.5rem;
+                padding-top: 1.5rem;
             }
         }
     </style>
