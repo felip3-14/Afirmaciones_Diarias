@@ -2,8 +2,10 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from .models import Comentario, Voto
 from django.db.models import Count
+from django.http import JsonResponse
 import json
 import os
+import time
 
 # Cargar afirmaciones desde JSON
 def load_affirmations_from_json():
@@ -11,7 +13,8 @@ def load_affirmations_from_json():
     if os.path.exists(json_path):
         with open(json_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            return data.get('affirmations', [])
+            affirmations = data.get('affirmations', [])
+            return affirmations
     return []
 
 # Utilidad: obtener la afirmación del día (secuencial, sin repetir las últimas 4)
@@ -25,7 +28,8 @@ def get_daily_affirmation():
     # Buscar si ya hay votos para hoy (significa que ya se eligió afirmación)
     votos_hoy = Voto.objects.filter(fecha=hoy)
     if votos_hoy.exists():
-        return votos_hoy.first().afirmacion_texto
+        afirmacion_elegida = votos_hoy.first().afirmacion_texto
+        return afirmacion_elegida
     
     # Si no hay votos hoy, elegir nueva afirmación evitando las últimas 4
     ultimas_afirmaciones = list(Voto.objects.order_by('-fecha').values_list('afirmacion_texto', flat=True)[:4])
@@ -54,24 +58,59 @@ def index(request):
             nombre = request.POST.get('nombre_comentario', '').strip()
             texto = request.POST.get('comentario', '').strip()
             if nombre and texto:
-                Comentario.objects.create(
+                # Verificar si no existe ya un comentario idéntico del mismo usuario hoy
+                hoy = timezone.now().date()
+                comentario_existente = Comentario.objects.filter(
                     nombre_usuario=nombre,
                     afirmacion_texto=afirmacion_texto,
-                    texto=texto
-                )
-                mensaje = '¡Gracias por tu comentario!'
+                    texto=texto,
+                    fecha_creacion__date=hoy
+                ).exists()
+                
+                if not comentario_existente:
+                    # Simular tiempo de procesamiento para el efecto
+                    time.sleep(0.5)
+                    Comentario.objects.create(
+                        nombre_usuario=nombre,
+                        afirmacion_texto=afirmacion_texto,
+                        texto=texto
+                    )
+                    mensaje = '¡Gracias por tu comentario!'
+                else:
+                    mensaje = 'Ya has enviado este comentario hoy.'
+                
+                # Si es AJAX, devolver JSON
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'mensaje': mensaje})
                 return redirect('.')
                 
         if 'voto' in request.POST:
             nombre = request.POST.get('nombre_voto', '').strip()
             valor = request.POST.get('voto')
             if nombre and valor in ['positivo', 'neutral', 'negativo']:
-                Voto.objects.create(
+                # Verificar si el usuario ya votó hoy
+                hoy = timezone.now().date()
+                voto_existente = Voto.objects.filter(
                     nombre_usuario=nombre,
                     afirmacion_texto=afirmacion_texto,
-                    valor=valor
-                )
-                mensaje = '¡Gracias por tu voto!'
+                    fecha=hoy
+                ).exists()
+                
+                if not voto_existente:
+                    # Simular tiempo de procesamiento
+                    time.sleep(0.3)
+                    Voto.objects.create(
+                        nombre_usuario=nombre,
+                        afirmacion_texto=afirmacion_texto,
+                        valor=valor
+                    )
+                    mensaje = '¡Gracias por tu voto!'
+                else:
+                    mensaje = 'Ya has votado hoy.'
+                
+                # Si es AJAX, devolver JSON
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return JsonResponse({'success': True, 'mensaje': mensaje})
                 return redirect('.')
 
     return render(request, 'afirmaciones/index.html', {
