@@ -66,7 +66,8 @@ Este proyecto está bajo la Licencia MIT.
 ## Notas del Proyecto
 
 ### Notas Importantes
-- **App en desarrollo previo a launch**: Esta app esta en un beta testing por parte del desarrollador 
+- **App en desarrollo previo a launch**: Esta app esta en un beta testing por parte del desarrollador *felip3-14*
+previas al launch, las mejoras, sugerencias o comentarios *on the side* son aceptadas. 
 
 ### Características Especiales
 - **Efecto Aurora Boreal**: El fondo de la aplicación simula el movimiento de una aurora boreal usando gradientes animados y partículas flotantes.

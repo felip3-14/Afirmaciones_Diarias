@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Afirmación del Día</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; color: #333; }
+        .container { max-width: 600px; margin: 2rem auto; background: #fff; border-radius: 15px; box-shadow: 0 2px 8px #ccc; padding: 2rem; }
+        h1, h2 { text-align: center; color: #2c3e50; }
+        h3 { color: #2c3e50; }
+        .affirmation { 
+            font-size: 1.5rem; 
+            margin: 2rem 0; 
+            text-align: center; 
+            background: #e8f5e8; 
+            padding: 1.5rem; 
+            border-radius: 10px; 
+            color: #2c3e50; 
+            font-weight: bold;
+        }
+        .votes { text-align: center; margin: 1rem 0; color: #333; }
+        .vote-form { background: #f0f8ff; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .comment-form { background: #fff8dc; padding: 1rem; border-radius: 8px; margin: 1rem 0; }
+        .comments { margin-top: 2rem; }
+        .comment { 
+            background: #f9f9f9; 
+            border-radius: 8px; 
+            padding: 0.7rem 1rem; 
+            margin-bottom: 1rem; 
+            border-left: 4px solid #4CAF50;
+            color: #333;
+        }
+        .comment strong { color: #2c3e50; }
+        .comment small { color: #666; }
+        form { margin: 1rem 0; }
+        input[type=text], textarea { 
+            width: 90%; 
+            padding: 0.5rem; 
+            border: 2px solid #ddd; 
+            border-radius: 5px; 
+            margin: 0.3rem;
+            color: #333;
+        }
+        button, input[type=submit] { 
+            background: #4CAF50; 
+            color: #fff; 
+            border: none; 
+            border-radius: 20px; 
+            padding: 0.5rem 1.5rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin: 0.3rem; 
+        }
+        button:hover, input[type=submit]:hover { background: #388e3c; }
+        .msg { 
+            background: #dff0d8; 
+            color: #2c3e50; 
+            border-radius: 10px; 
+            padding: 1rem; 
+            margin: 1rem 0; 
+            text-align: center; 
+        }
+        .vote-buttons { margin: 1rem 0; }
+        a { color: #4CAF50; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✨ Afirmación del Día ✨</h1>
+    {% if afirmacion %}
+        <div class="affirmation">{{ afirmacion }}</div>
+        
+        <div class="vote-form">
+            <h3>¿Te resuena esta afirmación?</h3>
+            <form method="post">{% csrf_token %}
+                <input type="text" name="nombre_voto" placeholder="Tu nombre" required><br>
+                <div class="vote-buttons">
+                    <button type="submit" name="voto" value="positivo">👍 Sí</button>
+                    <button type="submit" name="voto" value="neutral">😐 Neutral</button>
+                    <button type="submit" name="voto" value="negativo">👎 No</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="votes">
+            <strong>Votos de hoy:</strong>
+            👍 {{ votos.positivo|default:0 }} |
+            😐 {{ votos.neutral|default:0 }} |
+            👎 {{ votos.negativo|default:0 }}
+        </div>
+        
+        <div class="comment-form">
+            <h3>Comparte tu positividad</h3>
+            <form method="post">{% csrf_token %}
+                <input type="text" name="nombre_comentario" placeholder="Tu nombre" required><br>
+                <textarea name="comentario" rows="3" placeholder="Deja un mensaje positivo para inspirar a otros..." required></textarea><br>
+                <input type="submit" value="Compartir Mensaje">
+            </form>
+        </div>
+        
+        {% if mensaje %}<div class="msg">{{ mensaje }}</div>{% endif %}
+        
+        <div class="comments">
+            <h2>Mensajes del Día</h2>
+            {% if comentarios %}
+                {% for c in comentarios %}
+                    <div class="comment">
+                        <strong>{{ c.nombre_usuario }}</strong>: {{ c.texto }}
+                        <br><small>{{ c.fecha_creacion|date:"H:i d/m/Y" }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="msg">Sé el primero en compartir un mensaje positivo hoy! 🌟</div>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="msg">No hay afirmaciones cargadas aún. <a href="/admin/">Agrega algunas desde el admin</a></div>
+    {% endif %}
+</div>
+</body>
+</html> 
