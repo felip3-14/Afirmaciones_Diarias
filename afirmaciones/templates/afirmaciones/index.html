@@ -833,8 +833,16 @@
         
         // Función de debug temporal - REMOVER EN PRODUCCIÓN
         function resetApp() {
+            console.log('🔧 RESET: Limpiando localStorage y reiniciando...');
             localStorage.clear();
-            location.reload();
+            // Limpiar variables globales
+            currentUser = '';
+            cookiesAccepted = false;
+            // Ocultar todas las pantallas
+            hideAllScreens();
+            // Mostrar pantalla de cookies
+            document.getElementById('cookieConsentScreen').style.display = 'flex';
+            console.log('🔧 RESET: App reiniciada');
         }
         
         // Agregar botón de debug temporal al body
@@ -855,23 +863,7 @@
             document.body.appendChild(debugBtn);
         });
         
-        // Verificar si ya se aceptaron las cookies anteriormente
-        function checkCookieConsent() {
-            const consent = localStorage.getItem('cookieConsent');
-            if (consent === 'accepted') {
-                cookiesAccepted = true;
-                // Verificar si ya tiene nombre guardado
-                const savedName = localStorage.getItem('userName');
-                if (savedName) {
-                    currentUser = savedName;
-                    showDashboard();
-                } else {
-                    showWelcomeScreen();
-                }
-                return true;
-            }
-            return false;
-        }
+
         
         // Aceptar cookies
         function acceptCookies() {
@@ -879,10 +871,8 @@
             localStorage.setItem('cookieConsent', 'accepted');
             cookiesAccepted = true;
             
-            // Ocultar pantalla de consentimiento
-            document.getElementById('cookieConsentScreen').style.display = 'none';
-            
-            // Mostrar pantalla de bienvenida para ingresar nombre
+            // Ocultar todas las pantallas y mostrar bienvenida
+            hideAllScreens();
             showWelcomeScreen();
         }
         
@@ -896,9 +886,9 @@
         
         // Mostrar pantalla de bienvenida
         function showWelcomeScreen() {
-            document.getElementById('cookieConsentScreen').style.display = 'none';
-            document.getElementById('cookieDeclinedScreen').style.display = 'none';
+            hideAllScreens();
             document.getElementById('welcomeScreen').style.display = 'block';
+            console.log('👋 Mostrando pantalla de bienvenida');
         }
         
         // Inicializar la app
@@ -907,18 +897,44 @@
             console.log('🚀 URL actual:', window.location.href);
             console.log('🚀 User Agent:', navigator.userAgent);
             
+            // Ocultar todas las pantallas primero
+            hideAllScreens();
+            
             // Verificar estado actual del localStorage
             const currentConsent = localStorage.getItem('cookieConsent');
             console.log('🍪 Estado actual del consentimiento:', currentConsent);
             
             // Si no hay consentimiento previo, mostrar pantalla de cookies
-            if (!checkCookieConsent()) {
+            if (currentConsent !== 'accepted') {
                 console.log('🍪 Mostrando pantalla de consentimiento');
                 document.getElementById('cookieConsentScreen').style.display = 'flex';
             } else {
-                console.log('🍪 Consentimiento ya otorgado, mostrando bienvenida');
+                console.log('🍪 Consentimiento ya otorgado');
+                cookiesAccepted = true;
+                
+                // Verificar si ya tiene nombre guardado
+                const savedName = localStorage.getItem('userName');
+                if (savedName && savedName.trim()) {
+                    console.log('👤 Nombre guardado encontrado:', savedName);
+                    currentUser = savedName;
+                    showDashboard();
+                } else {
+                    console.log('👤 No hay nombre guardado, mostrando bienvenida');
+                    showWelcomeScreen();
+                }
             }
         });
+        
+        // Función para ocultar todas las pantallas
+        function hideAllScreens() {
+            document.getElementById('cookieConsentScreen').style.display = 'none';
+            document.getElementById('cookieDeclinedScreen').style.display = 'none';
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('affirmationScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'none';
+            // Ocultar popup de comentarios también
+            document.getElementById('commentPopup').classList.remove('show');
+        }
         
         // Manejar formulario de nombre (solo si se aceptaron cookies)
         document.getElementById('nameForm').addEventListener('submit', function(e) {
@@ -1253,11 +1269,9 @@
         }
         
         function showDashboard() {
-            document.getElementById('cookieConsentScreen').style.display = 'none';
-            document.getElementById('cookieDeclinedScreen').style.display = 'none';
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('affirmationScreen').style.display = 'none';
+            hideAllScreens();
             document.getElementById('dashboard').style.display = 'block';
+            console.log('📊 Mostrando dashboard para usuario:', currentUser);
             
             // Configurar nombre del usuario en el formulario si ya está guardado
             if (currentUser) {
