@@ -69,6 +69,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            display: none; /* Oculto por defecto, JS lo mostrará */
         }
         
         /* Estilos base para desktop */
@@ -161,21 +162,23 @@
         }
         
         /* Pantalla de consentimiento de cookies - SIMPLE */
-        .cookie-consent-screen {
+        .cookie-consent-screen, .cookie-declined-screen {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            padding: 2rem;
+            padding: 1rem;
+            display: none; /* Oculto por defecto */
         }
         
-        .consent-content {
+        .consent-content, .declined-content {
             background: white;
             padding: 2rem;
             border-radius: 10px;
@@ -184,6 +187,10 @@
             text-align: center;
             border: 2px solid #ddd;
             color: #333;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
         .consent-content h1 {
@@ -237,46 +244,6 @@
         
         .decline-btn:hover {
             background: #c82333 !important;
-        }
-        
-        /* Pantalla de rechazo de cookies - SIMPLE */
-        .cookie-declined-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 2rem;
-        }
-        
-        .declined-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            border: 2px solid #ddd;
-            color: #333;
-        }
-        
-        .declined-content h1 {
-            color: #dc3545;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .declined-content p {
-            color: #666;
-            margin-bottom: 1rem;
-            line-height: 1.6;
-            font-size: 1rem;
         }
         
         .reload-btn {
@@ -583,35 +550,35 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Pantalla de consentimiento de cookies SIMPLIFICADA -->
-        <div class="cookie-consent-screen" id="cookieConsentScreen" style="display: flex;">
-            <div class="consent-content">
-                <h1>🍪 Cookies Necesarias</h1>
-                <p>Esta app necesita cookies para funcionar correctamente y proteger tus comentarios.</p>
-                <div class="consent-buttons">
-                    <button onclick="acceptCookies()" class="accept-btn">
-                        ✅ Aceptar y Continuar
-                    </button>
-                    <button onclick="declineCookies()" class="decline-btn">
-                        ❌ Rechazar
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pantalla de rechazo de cookies -->
-        <div class="cookie-declined-screen" id="cookieDeclinedScreen" style="display: none;">
-            <div class="declined-content">
-                <h1>😔 Lo sentimos</h1>
-                <p>Sin el consentimiento de cookies, no podemos ofrecerte la experiencia completa de Afirmaciones Diarias.</p>
-                <p>Si cambias de opinión, puedes recargar la página y aceptar las cookies.</p>
-                <button onclick="location.reload()" class="reload-btn">
-                    🔄 Recargar página
+    <!-- Pantallas de Cookies (fuera del contenedor principal) -->
+    <div class="cookie-consent-screen" id="cookieConsentScreen" style="display: none;">
+        <div class="consent-content">
+            <h1>🍪 Cookies Necesarias</h1>
+            <p>Esta app necesita cookies para funcionar correctamente y proteger tus comentarios.</p>
+            <div class="consent-buttons">
+                <button onclick="acceptCookies()" class="accept-btn">
+                    ✅ Aceptar y Continuar
+                </button>
+                <button onclick="declineCookies()" class="decline-btn">
+                    ❌ Rechazar
                 </button>
             </div>
         </div>
+    </div>
 
+    <div class="cookie-declined-screen" id="cookieDeclinedScreen" style="display: none;">
+        <div class="declined-content">
+            <h1>😔 Lo sentimos</h1>
+            <p>Sin el consentimiento de cookies, no podemos ofrecerte la experiencia completa de Afirmaciones Diarias.</p>
+            <p>Si cambias de opinión, puedes recargar la página y aceptar las cookies.</p>
+            <button onclick="location.reload()" class="reload-btn">
+                🔄 Recargar página
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor principal de la app -->
+    <div class="container">
         <!-- Pantalla de bienvenida -->
         <div class="welcome-screen" id="welcomeScreen" style="display: none;">
             <h1>✨ ¡Perfecto! Comencemos tu día positivo ✨</h1>
@@ -718,14 +685,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Iniciando app...');
             
-            // Ocultar todas las pantallas primero
+            // Ocultar todo primero
             hideAllScreens();
             
             // Verificar estado actual del localStorage
             const currentConsent = localStorage.getItem('cookieConsent');
             console.log('🍪 Estado actual del consentimiento:', currentConsent);
             
-            // Si no hay consentimiento previo, mostrar pantalla de cookies
+            // Decidir qué mostrar
             if (currentConsent !== 'accepted') {
                 console.log('🍪 Mostrando pantalla de consentimiento');
                 document.getElementById('cookieConsentScreen').style.display = 'flex';
@@ -733,7 +700,6 @@
                 console.log('🍪 Consentimiento ya otorgado');
                 cookiesAccepted = true;
                 
-                // Verificar si ya tiene nombre guardado
                 const savedName = localStorage.getItem('userName');
                 if (savedName && savedName.trim()) {
                     console.log('👤 Nombre guardado encontrado:', savedName);
@@ -746,12 +712,19 @@
             }
         });
         
-        // Función para ocultar todas las pantallas
+        // Función para ocultar todas las pantallas y el contenedor principal
         function hideAllScreens() {
             document.getElementById('cookieConsentScreen').style.display = 'none';
             document.getElementById('cookieDeclinedScreen').style.display = 'none';
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'none';
+            
+            const container = document.querySelector('.container');
+            container.style.display = 'none';
+
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            if (welcomeScreen) welcomeScreen.style.display = 'none';
+            
+            const dashboard = document.getElementById('dashboard');
+            if (dashboard) dashboard.style.display = 'none';
         }
         
         // Manejar formulario de nombre
@@ -775,15 +748,16 @@
         
         function showDashboard() {
             hideAllScreens();
+            document.querySelector('.container').style.display = 'block';
             document.getElementById('dashboard').style.display = 'block';
             console.log('📊 Mostrando dashboard para usuario:', currentUser);
             
-            // Configurar nombre del usuario en el formulario si ya está guardado
+            // Configurar nombre del usuario en el formulario
             if (currentUser) {
                 const nameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
                 if (nameField) {
                     nameField.value = currentUser;
-                    nameField.style.backgroundColor = '#e8f5e8'; // Verde suave para mostrar que está pre-llenado
+                    nameField.style.backgroundColor = '#e8f5e8';
                 }
             }
             
