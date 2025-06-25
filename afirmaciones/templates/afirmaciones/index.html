@@ -313,107 +313,6 @@
             opacity: 0.9;
         }
         
-        /* Pantalla de afirmación */
-        .affirmation-screen {
-            display: none;
-            animation: slideInFromTop 1s ease-out;
-        }
-        
-        .affirmation-text {
-            font-size: 2rem;
-            font-weight: bold;
-            margin: 2rem 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            line-height: 1.4;
-            opacity: 0;
-            animation: textReveal 2s ease-out 1s forwards;
-        }
-        
-        @keyframes textReveal {
-            0% { 
-                opacity: 0; 
-                transform: translateY(30px);
-            }
-            100% { 
-                opacity: 1; 
-                transform: translateY(0);
-            }
-        }
-        
-        .timer {
-            font-size: 1.5rem;
-            margin: 1rem 0;
-            color: #ffeb3b;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.5s ease;
-        }
-        
-        .timer #countdown {
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        
-        /* Cartel de comentarios animado */
-        .comment-popup {
-            position: fixed;
-            bottom: -300px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-            padding: 2rem;
-            border-radius: 20px 20px 0 0;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
-            width: 90%;
-            max-width: 600px;
-            transition: bottom 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            z-index: 1000;
-        }
-        
-        .comment-popup.show {
-            bottom: 0;
-        }
-        
-        .comment-popup h3 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        /* Mejorar popup en desktop */
-        @media (min-width: 769px) {
-            .comment-popup {
-                max-width: 800px;
-                padding: 3rem;
-                border-radius: 20px;
-                bottom: -400px;
-            }
-            
-            .comment-popup h3 {
-                font-size: 2rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .comment-popup p {
-                font-size: 1.2rem;
-                margin-bottom: 2rem;
-            }
-            
-            .comment-popup textarea {
-                font-size: 1.2rem;
-                padding: 1.5rem;
-                min-height: 120px;
-            }
-            
-            .comment-popup button {
-                font-size: 1.2rem;
-                padding: 1rem 2rem;
-                margin: 1rem 0.5rem;
-            }
-        }
-        
         /* Dashboard de comentarios */
         .dashboard {
             display: none;
@@ -543,11 +442,6 @@
             to { opacity: 1; }
         }
         
-        @keyframes slideInFromTop {
-            from { transform: translateY(-100px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
         @keyframes slideInFromLeft {
             from { transform: translateX(-50px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
@@ -566,14 +460,7 @@
             }
             .welcome-screen h1 { font-size: 1.8rem; }
             .welcome-screen p { font-size: 1rem; }
-            .affirmation-text { font-size: 1.6rem; }
-            .timer { font-size: 1.2rem; }
-            .vote-buttons h3 { font-size: 1.3rem; }
-            .vote-buttons button { 
-                font-size: 1.2rem; 
-                padding: 0.8rem 1.5rem;
-                margin: 0.3rem;
-            }
+            
             input[type="text"] { 
                 font-size: 1rem; 
                 padding: 1rem;
@@ -737,26 +624,6 @@
             </form>
         </div>
         
-        <!-- Pantalla de afirmación -->
-        <div class="affirmation-screen" id="affirmationScreen" style="display: none;">
-            <h2>Tu afirmación de hoy</h2>
-            <div class="affirmation-text" id="affirmationText">
-                {% if afirmacion %}{{ afirmacion }}{% endif %}
-            </div>
-            <div class="timer" id="timer">Tómate un momento para reflexionar... <span id="countdown">8</span>s</div>
-            
-            <div class="vote-buttons" id="voteButtons" style="display: none;">
-                <h3>¿Te resuena esta afirmación?</h3>
-                <form method="post" id="voteForm">
-                    {% csrf_token %}
-                    <input type="hidden" name="nombre_voto" id="voteUserName">
-                    <button type="submit" name="voto" value="positivo">👍 Sí</button>
-                    <button type="submit" name="voto" value="neutral">😐 Neutral</button>
-                    <button type="submit" name="voto" value="negativo">👎 No</button>
-                </form>
-            </div>
-        </div>
-        
         <!-- Dashboard de comentarios -->
         <div class="dashboard" id="dashboard" style="display: none;">
             <h2>✨ Afirmaciones Diarias ✨</h2>
@@ -812,35 +679,19 @@
         </div>
     </div>
     
-    <!-- Cartel popup para comentarios -->
-    <div class="comment-popup" id="commentPopup">
-        <h3>💭 ¿Quieres dejar un comentario positivo?</h3>
-        <p>Comparte tu energía positiva con otros</p>
-        <form method="post" id="commentForm">
-            {% csrf_token %}
-            <input type="hidden" name="nombre_comentario" id="commentUserName">
-            <textarea name="comentario" rows="3" placeholder="Escribe tu mensaje positivo aquí..." required></textarea>
-            <br>
-            <button type="submit">✨ Compartir positividad</button>
-            <button type="button" onclick="skipComment()">Omitir</button>
-        </form>
-    </div>
-    
     <script>
         let currentUser = '';
-        let timerInterval;
         let cookiesAccepted = false;
         
-        // Función de debug temporal - REMOVER EN PRODUCCIÓN
+        // Función de debug temporal
         function resetApp() {
             console.log('🔧 RESET: Limpiando localStorage y reiniciando...');
             localStorage.clear();
             // Limpiar variables globales
             currentUser = '';
             cookiesAccepted = false;
-            // Ocultar todas las pantallas
+            // Ocultar todas las pantallas y mostrar la de cookies
             hideAllScreens();
-            // Mostrar pantalla de cookies
             document.getElementById('cookieConsentScreen').style.display = 'flex';
             console.log('🔧 RESET: App reiniciada');
         }
@@ -863,39 +714,9 @@
             document.body.appendChild(debugBtn);
         });
         
-
-        
-        // Aceptar cookies
-        function acceptCookies() {
-            console.log('🍪 Usuario aceptó cookies');
-            localStorage.setItem('cookieConsent', 'accepted');
-            cookiesAccepted = true;
-            
-            // Ocultar todas las pantallas y mostrar bienvenida
-            hideAllScreens();
-            showWelcomeScreen();
-        }
-        
-        // Rechazar cookies
-        function declineCookies() {
-            console.log('🚫 Usuario rechazó cookies');
-            localStorage.setItem('cookieConsent', 'declined');
-            document.getElementById('cookieConsentScreen').style.display = 'none';
-            document.getElementById('cookieDeclinedScreen').style.display = 'flex';
-        }
-        
-        // Mostrar pantalla de bienvenida
-        function showWelcomeScreen() {
-            hideAllScreens();
-            document.getElementById('welcomeScreen').style.display = 'block';
-            console.log('👋 Mostrando pantalla de bienvenida');
-        }
-        
         // Inicializar la app
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Iniciando app...');
-            console.log('🚀 URL actual:', window.location.href);
-            console.log('🚀 User Agent:', navigator.userAgent);
             
             // Ocultar todas las pantallas primero
             hideAllScreens();
@@ -930,13 +751,10 @@
             document.getElementById('cookieConsentScreen').style.display = 'none';
             document.getElementById('cookieDeclinedScreen').style.display = 'none';
             document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('affirmationScreen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'none';
-            // Ocultar popup de comentarios también
-            document.getElementById('commentPopup').classList.remove('show');
         }
         
-        // Manejar formulario de nombre (solo si se aceptaron cookies)
+        // Manejar formulario de nombre
         document.getElementById('nameForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -950,323 +768,10 @@
                 // Guardar nombre en localStorage para futuras visitas
                 localStorage.setItem('userName', currentUser);
                 
-                // Configurar nombre en todos los formularios
-                const voteUserNameField = document.getElementById('voteUserName');
-                const commentUserNameField = document.getElementById('commentUserName');
-                const dashboardNameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
-                
-                if (voteUserNameField) voteUserNameField.value = currentUser;
-                if (commentUserNameField) commentUserNameField.value = currentUser;
-                if (dashboardNameField) dashboardNameField.value = currentUser;
-                
-                // Ir directo al dashboard con formulario simplificado
+                // Ir directo al dashboard
                 showDashboard();
             }
         });
-        
-        function showAffirmationScreen() {
-            document.getElementById('welcomeScreen').style.display = 'none';
-            document.getElementById('affirmationScreen').style.display = 'block';
-            startTimer();
-        }
-        
-        function startTimer() {
-            let seconds = 8; // Reducido para mejor experiencia
-            const countdownEl = document.getElementById('countdown');
-            const timerEl = document.getElementById('timer');
-            
-            // Mostrar el timer después de que aparezca el texto
-            setTimeout(() => {
-                timerEl.style.opacity = '1';
-                timerEl.style.transform = 'translateY(0)';
-            }, 2000);
-            
-            timerInterval = setInterval(() => {
-                seconds--;
-                countdownEl.textContent = seconds;
-                
-                // Efecto visual cuando queda poco tiempo
-                if (seconds <= 3) {
-                    countdownEl.style.color = '#ff6b6b';
-                    countdownEl.style.transform = 'scale(1.1)';
-                }
-                
-                if (seconds <= 0) {
-                    clearInterval(timerInterval);
-                    showVoteButtons();
-                }
-            }, 1000);
-        }
-        
-        function showVoteButtons() {
-            document.getElementById('timer').style.display = 'none';
-            document.getElementById('voteButtons').style.display = 'block';
-        }
-        
-        // Manejar formulario de voto
-        document.getElementById('voteForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            fetch('', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            }).then(() => {
-                setTimeout(showCommentPopup, 1000);
-            });
-        });
-        
-        function showCommentPopup() {
-            document.getElementById('commentPopup').classList.add('show');
-        }
-        
-        // Función para obtener el token CSRF de forma más robusta
-        function getCSRFToken() {
-            // Intentar múltiples métodos para obtener el token
-            let token = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
-            if (!token) {
-                token = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
-            }
-            if (!token) {
-                // Buscar en cookies
-                const cookieValue = document.cookie
-                    .split('; ')
-                    .find(row => row.startsWith('csrftoken='))
-                    ?.split('=')[1];
-                token = cookieValue;
-            }
-            return token;
-        }
-        
-        // Manejar formulario de comentario - VERSIÓN MEJORADA
-        document.getElementById('commentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Verificar consentimiento de cookies antes de enviar
-            if (!cookiesAccepted) {
-                alert('Error: No se puede enviar el comentario sin aceptar las cookies de seguridad.');
-                return;
-            }
-            
-            const submitButton = this.querySelector('button[type="submit"]');
-            const textarea = this.querySelector('textarea[name="comentario"]');
-            const comentarioText = textarea.value.trim();
-            
-            // Debug info
-            console.log('📱 Iniciando envío de comentario...');
-            console.log('📱 User Agent:', navigator.userAgent);
-            console.log('📱 Texto comentario:', comentarioText.substring(0, 50));
-            console.log('🍪 Cookies aceptadas:', cookiesAccepted);
-            
-            // Validación client-side
-            if (!comentarioText) {
-                alert('Por favor, escribe un mensaje antes de enviar.');
-                return;
-            }
-            
-            if (comentarioText.length < 3) {
-                alert('El mensaje debe tener al menos 3 caracteres.');
-                return;
-            }
-            
-            // Deshabilitar botón durante envío
-            submitButton.disabled = true;
-            submitButton.textContent = '⏳ Enviando...';
-            
-            const formData = new FormData(this);
-            const csrfToken = getCSRFToken();
-            
-            console.log('📱 CSRF Token encontrado:', csrfToken ? 'SÍ' : 'NO');
-            
-            // Intentar envío AJAX primero
-            const timeoutId = setTimeout(() => {
-                console.log('📱 Timeout AJAX, usando fallback');
-                submitFormFallback(formData);
-            }, 15000); // 15 segundos timeout para móviles
-            
-            fetch('', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': csrfToken,
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                credentials: 'include'  // Importante para cookies
-            })
-            .then(response => {
-                clearTimeout(timeoutId);
-                console.log('📱 Respuesta HTTP:', response.status, response.statusText);
-                
-                if (!response.ok) {
-                    throw new Error(`Error de red: ${response.status} ${response.statusText}`);
-                }
-                
-                // Verificar si es JSON o HTML
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    return response.json();
-                } else {
-                    throw new Error('Respuesta no es JSON, usando fallback');
-                }
-            })
-            .then(data => {
-                console.log('📱 Respuesta JSON:', data);
-                if (data.success) {
-                    showSuccessMessage('¡Comentario enviado con éxito! 🌟');
-                    hideCommentPopup();
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    throw new Error(data.mensaje || 'Error al enviar comentario');
-                }
-            })
-            .catch(error => {
-                clearTimeout(timeoutId);
-                console.error('📱 Error AJAX:', error);
-                
-                // Si es error CSRF, intentar recargar token y reintentar
-                if (error.message.includes('403') || error.message.includes('CSRF')) {
-                    console.log('📱 Error CSRF detectado, intentando solucionarlo...');
-                    
-                    // Intentar obtener nuevo token
-                    fetch(window.location.href)
-                        .then(response => response.text())
-                        .then(html => {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, 'text/html');
-                            const newToken = doc.querySelector('[name="csrfmiddlewaretoken"]')?.value;
-                            
-                            if (newToken) {
-                                console.log('📱 Nuevo token CSRF obtenido');
-                                // Actualizar token en el formulario actual
-                                const currentTokenInput = document.querySelector('[name="csrfmiddlewaretoken"]');
-                                if (currentTokenInput) {
-                                    currentTokenInput.value = newToken;
-                                }
-                                
-                                // Mostrar mensaje y usar fallback
-                                showErrorMessage('Reintentando con nueva configuración de seguridad...');
-                                setTimeout(() => {
-                                    submitFormFallback(formData);
-                                }, 2000);
-                            } else {
-                                console.log('📱 No se pudo obtener nuevo token, usando fallback directo');
-                                showErrorMessage('Reintentando envío...');
-                                setTimeout(() => {
-                                    submitFormFallback(formData);
-                                }, 1000);
-                            }
-                        })
-                        .catch(() => {
-                            console.log('📱 Error obteniendo nuevo token, usando fallback');
-                            showErrorMessage('Reintentando envío...');
-                            setTimeout(() => {
-                                submitFormFallback(formData);
-                            }, 1000);
-                        });
-                } else {
-                    // Si falla AJAX por otra razón, usar envío tradicional
-                    showErrorMessage('Reintentando envío...');
-                    setTimeout(() => {
-                        submitFormFallback(formData);
-                    }, 1000);
-                }
-            })
-            .finally(() => {
-                // Rehabilitar botón
-                submitButton.disabled = false;
-                submitButton.textContent = '✨ Compartir positividad';
-            });
-        });
-        
-        // Función de fallback para envío tradicional - MEJORADA
-        function submitFormFallback(formData) {
-            console.log('📱 Usando método de fallback (envío tradicional)');
-            
-            // Crear formulario oculto para envío tradicional
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = '';
-            form.style.display = 'none';
-            
-            // Agregar todos los campos del FormData
-            for (let [key, value] of formData.entries()) {
-                const input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = value;
-                form.appendChild(input);
-            }
-            
-            // Asegurarse de que el CSRF token esté incluido
-            const csrfToken = getCSRFToken();
-            if (csrfToken) {
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';
-                csrfInput.value = csrfToken;
-                form.appendChild(csrfInput);
-            }
-            
-            // Agregar indicador de que es fallback
-            const fallbackInput = document.createElement('input');
-            fallbackInput.type = 'hidden';
-            fallbackInput.name = 'fallback_submit';
-            fallbackInput.value = '1';
-            form.appendChild(fallbackInput);
-            
-            document.body.appendChild(form);
-            console.log('📱 Enviando formulario tradicional...');
-            form.submit();
-        }
-        
-        // Mostrar mensajes de éxito/error - MEJORADOS
-        function showSuccessMessage(message) {
-            console.log('📱 Mostrando mensaje de éxito:', message);
-            const popup = document.getElementById('commentPopup');
-            const originalContent = popup.innerHTML;
-            popup.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <h3 style="color: #4CAF50;">✅ ${message}</h3>
-                    <p style="margin-top: 1rem;">Redirigiendo...</p>
-                </div>
-            `;
-            setTimeout(() => {
-                popup.innerHTML = originalContent;
-            }, 3000);
-        }
-        
-        function showErrorMessage(message) {
-            console.log('📱 Mostrando mensaje de error:', message);
-            const popup = document.getElementById('commentPopup');
-            const originalContent = popup.innerHTML;
-            popup.innerHTML = `
-                <div style="text-align: center; padding: 2rem;">
-                    <h3 style="color: #ff6b6b;">⚠️ ${message}</h3>
-                    <p style="margin-top: 1rem; font-size: 0.9rem;">
-                        Si el problema persiste, por favor recarga la página.
-                    </p>
-                </div>
-            `;
-            setTimeout(() => {
-                popup.innerHTML = originalContent;
-            }, 5000);
-        }
-        
-        function skipComment() {
-            hideCommentPopup();
-            setTimeout(showDashboard, 500);
-        }
-        
-        function hideCommentPopup() {
-            document.getElementById('commentPopup').classList.remove('show');
-        }
         
         function showDashboard() {
             hideAllScreens();
