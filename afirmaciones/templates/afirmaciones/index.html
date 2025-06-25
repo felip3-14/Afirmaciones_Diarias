@@ -257,46 +257,49 @@
         };
 
         // --- Lógica de Flujo ---
-        document.addEventListener('DOMContentLoaded', () => {
-            const consent = localStorage.getItem('cookieConsent');
-            if (!consent) {
-                screens.cookie.style.display = 'flex';
-            } else if (consent === 'accepted') {
-                screens.container.style.display = 'block';
-                currentUser = localStorage.getItem('userName');
-                if (currentUser) {
-                    navigateTo('affirmation');
-                } else {
-                    navigateTo('name');
-                }
+        function showScreen(screenName) {
+            // 1. Ocultar todo primero para evitar superposiciones
+            screens.cookie.style.display = 'none';
+            screens.declined.style.display = 'none';
+            screens.container.style.display = 'none';
+            document.querySelectorAll('.screen').forEach(s => s.style.display = 'none');
+
+            // 2. Mostrar lo correcto
+            if (screenName === 'cookie' || screenName === 'declined') {
+                screens[screenName].style.display = 'flex';
             } else {
-                screens.declined.style.display = 'flex';
-            }
-        });
-        
-        function navigateTo(screenName) {
-            Object.values(screens).forEach(s => {
-                if(s && s.classList.contains('screen')) s.style.display = 'none';
-            });
-            if (screens[screenName]) {
-                screens[screenName].style.display = 'block';
-                
-                // Lógica específica al navegar a una pantalla
-                if (screenName === 'affirmation') {
-                    startAffirmationTimer();
+                screens.container.style.display = 'block';
+                if (screens[screenName]) {
+                    screens[screenName].style.display = 'block';
                 }
             }
         }
 
+        document.addEventListener('DOMContentLoaded', () => {
+            const consent = localStorage.getItem('cookieConsent');
+            
+            if (consent === 'accepted') {
+                currentUser = localStorage.getItem('userName');
+                if (currentUser) {
+                    showScreen('affirmation');
+                    startAffirmationTimer();
+                } else {
+                    showScreen('name');
+                }
+            } else if (consent === 'declined') {
+                showScreen('declined');
+            } else {
+                showScreen('cookie');
+            }
+        });
+
         function handleCookies(accepted) {
-            screens.cookie.style.display = 'none';
             if (accepted) {
                 localStorage.setItem('cookieConsent', 'accepted');
-                screens.container.style.display = 'block';
-                navigateTo('name');
+                showScreen('name');
             } else {
                 localStorage.setItem('cookieConsent', 'declined');
-                screens.declined.style.display = 'flex';
+                showScreen('declined');
             }
         }
 
@@ -305,7 +308,8 @@
             currentUser = document.getElementById('userName').value.trim();
             if (currentUser) {
                 localStorage.setItem('userName', currentUser);
-                navigateTo('affirmation');
+                showScreen('affirmation');
+                startAffirmationTimer();
             }
         });
         
@@ -319,7 +323,7 @@
                 countdownEl.textContent = seconds;
                 if (seconds <= 0) {
                     clearInterval(timer);
-                    navigateTo('comment');
+                    showScreen('comment');
                 }
             }, 1000);
         }
@@ -339,13 +343,20 @@
                 body: new URLSearchParams(formData).toString(),
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                    'X-Requested-With': 'XMLHttpRequest' // FIX: Identifica la petición como AJAX para Django
                 }
             })
-            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(res => {
+                if (!res.ok) {
+                    // Si la respuesta no es 2xx, rechazar la promesa para que caiga en .catch
+                    return Promise.reject(new Error(`Error del servidor: ${res.status}`));
+                }
+                return res.json();
+            })
             .then(data => {
                 console.log(data.mensaje);
-                // Forzar recarga para ver el nuevo comentario en el dashboard
+                // Si el comentario se guarda, forzar recarga para ir al dashboard y ver los nuevos comentarios
                 window.location.reload();
             })
             .catch(err => {
@@ -371,4 +382,5 @@
         }
     </script>
 </body>
+</html> 
 </html> 
