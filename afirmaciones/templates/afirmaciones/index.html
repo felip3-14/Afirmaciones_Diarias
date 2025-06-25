@@ -627,6 +627,18 @@
                 padding: 1rem;
                 margin: 1rem 0;
             }
+            
+            /* Responsive para el botón de cambiar nombre */
+            .comment-form-section div[style*="display: flex"] {
+                flex-direction: column !important;
+                gap: 5px !important;
+            }
+            
+            .comment-form-section button[onclick="changeName()"] {
+                width: 100%;
+                margin: 0.5rem 0;
+                font-size: 0.9rem !important;
+            }
         }
         
         /* Estilos específicos para pantallas grandes (PC/Desktop) */
@@ -762,7 +774,12 @@
                 <h3>💭 Comparte tu energía positiva</h3>
                 <form method="post" id="simpleCommentForm">
                     {% csrf_token %}
-                    <input type="text" name="nombre_comentario" placeholder="Tu nombre" required style="margin-bottom: 1rem;">
+                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                        <input type="text" name="nombre_comentario" placeholder="Tu nombre" required style="flex: 1;">
+                        <button type="button" onclick="changeName()" style="background: #ffc107; color: #333; padding: 0.5rem 1rem; font-size: 0.9rem; white-space: nowrap;">
+                            🔄 Cambiar
+                        </button>
+                    </div>
                     <textarea name="comentario" rows="3" placeholder="Escribe tu mensaje positivo aquí..." required></textarea>
                     <button type="submit">✨ Compartir Positividad</button>
                 </form>
@@ -843,7 +860,14 @@
             const consent = localStorage.getItem('cookieConsent');
             if (consent === 'accepted') {
                 cookiesAccepted = true;
-                showDashboard();
+                // Verificar si ya tiene nombre guardado
+                const savedName = localStorage.getItem('userName');
+                if (savedName) {
+                    currentUser = savedName;
+                    showDashboard();
+                } else {
+                    showWelcomeScreen();
+                }
                 return true;
             }
             return false;
@@ -858,8 +882,8 @@
             // Ocultar pantalla de consentimiento
             document.getElementById('cookieConsentScreen').style.display = 'none';
             
-            // Ir directo al dashboard con formulario de comentarios
-            showDashboard();
+            // Mostrar pantalla de bienvenida para ingresar nombre
+            showWelcomeScreen();
         }
         
         // Rechazar cookies
@@ -907,9 +931,20 @@
             
             currentUser = document.getElementById('userName').value.trim();
             if (currentUser) {
-                document.getElementById('voteUserName').value = currentUser;
-                document.getElementById('commentUserName').value = currentUser;
-                showAffirmationScreen();
+                // Guardar nombre en localStorage para futuras visitas
+                localStorage.setItem('userName', currentUser);
+                
+                // Configurar nombre en todos los formularios
+                const voteUserNameField = document.getElementById('voteUserName');
+                const commentUserNameField = document.getElementById('commentUserName');
+                const dashboardNameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
+                
+                if (voteUserNameField) voteUserNameField.value = currentUser;
+                if (commentUserNameField) commentUserNameField.value = currentUser;
+                if (dashboardNameField) dashboardNameField.value = currentUser;
+                
+                // Ir directo al dashboard con formulario simplificado
+                showDashboard();
             }
         });
         
@@ -1224,6 +1259,15 @@
             document.getElementById('affirmationScreen').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             
+            // Configurar nombre del usuario en el formulario si ya está guardado
+            if (currentUser) {
+                const nameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
+                if (nameField) {
+                    nameField.value = currentUser;
+                    nameField.style.backgroundColor = '#e8f5e8'; // Verde suave para mostrar que está pre-llenado
+                }
+            }
+            
             // Configurar el formulario simplificado
             setupSimpleCommentForm();
         }
@@ -1327,6 +1371,25 @@
                 } else {
                     prompt('Copia este link para compartir:', text);
                 }
+            }
+        }
+        
+        // Función para cambiar nombre de usuario
+        function changeName() {
+            const nameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
+            if (nameField) {
+                // Limpiar el campo y enfocar
+                nameField.value = '';
+                nameField.style.backgroundColor = '#fff';
+                nameField.focus();
+                
+                // Actualizar variable global
+                currentUser = '';
+                
+                // Limpiar localStorage
+                localStorage.removeItem('userName');
+                
+                console.log('👤 Nombre de usuario borrado, permitiendo cambio');
             }
         }
     </script>
