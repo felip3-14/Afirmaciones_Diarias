@@ -277,6 +277,15 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const consent = localStorage.getItem('cookieConsent');
+            const showDashboardFlag = sessionStorage.getItem('showDashboardAfterComment');
+
+            if (showDashboardFlag === 'true') {
+                // El usuario acaba de comentar, va directo al dashboard
+                sessionStorage.removeItem('showDashboardAfterComment');
+                currentUser = localStorage.getItem('userName');
+                showScreen('dashboard');
+                return; // Finaliza la ejecución aquí
+            }
             
             if (consent === 'accepted') {
                 currentUser = localStorage.getItem('userName');
@@ -347,16 +356,11 @@
                     'X-Requested-With': 'XMLHttpRequest' // FIX: Identifica la petición como AJAX para Django
                 }
             })
-            .then(res => {
-                if (!res.ok) {
-                    // Si la respuesta no es 2xx, rechazar la promesa para que caiga en .catch
-                    return Promise.reject(new Error(`Error del servidor: ${res.status}`));
-                }
-                return res.json();
-            })
+            .then(res => res.ok ? res.json() : Promise.reject(res))
             .then(data => {
                 console.log(data.mensaje);
-                // Si el comentario se guarda, forzar recarga para ir al dashboard y ver los nuevos comentarios
+                // Poner bandera para mostrar el dashboard en la siguiente carga y recargar
+                sessionStorage.setItem('showDashboardAfterComment', 'true');
                 window.location.reload();
             })
             .catch(err => {
@@ -382,5 +386,4 @@
         }
     </script>
 </body>
-</html> 
 </html> 
