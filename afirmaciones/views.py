@@ -8,6 +8,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 import json
 import os
 import time
+import random
 
 # Cargar afirmaciones desde JSON
 def load_affirmations_from_json():
@@ -19,11 +20,14 @@ def load_affirmations_from_json():
             return affirmations
     return []
 
-# Utilidad: obtener la afirmación del día (secuencial, sin repetir las últimas 4)
+# Utilidad: obtener la afirmación del día (aleatoria, sin repetir las últimas 4)
 def get_daily_affirmation():
     affirmations = load_affirmations_from_json()
     if not affirmations:
         return None
+    
+    # Hacer la selección aleatoria
+    random.shuffle(affirmations)
     
     hoy = timezone.now().date()
     
@@ -40,7 +44,7 @@ def get_daily_affirmation():
         if afirmacion not in ultimas_afirmaciones:
             return afirmacion
     
-    # Si todas han sido usadas recientemente, usar la primera
+    # Si todas han sido usadas recientemente, usar la primera de la lista ya barajada
     return affirmations[0]
 
 @ensure_csrf_cookie
