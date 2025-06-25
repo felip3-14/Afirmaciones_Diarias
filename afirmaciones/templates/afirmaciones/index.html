@@ -49,6 +49,7 @@
             align-items: center;
             justify-content: center;
             color: white;
+            text-align: center;
         }
         
         @keyframes gradientShift {
@@ -66,310 +67,38 @@
             padding: 2rem;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            display: none; /* Oculto por defecto, JS lo mostrará */
+            display: none; /* Oculto hasta que se acepten las cookies */
         }
         
-        /* Estilos base para desktop */
-        @media (min-width: 769px) {
-            .container {
-                max-width: 1000px;
-                padding: 4rem;
-            }
-            
-            .welcome-screen h1 {
-                font-size: 3.5rem;
-                margin-bottom: 2rem;
-            }
-            
-            .welcome-screen p {
-                font-size: 1.5rem;
-                margin-bottom: 3rem;
-            }
-            
-            .affirmation-text {
-                font-size: 3rem;
-                margin: 3rem 0;
-                line-height: 1.3;
-            }
-            
-            .timer {
-                font-size: 1.8rem;
-                margin: 2rem 0;
-            }
-            
-            .vote-buttons h3 {
-                font-size: 2rem;
-                margin-bottom: 2rem;
-            }
-            
-            .vote-buttons button {
-                font-size: 1.8rem;
-                padding: 1.2rem 2.5rem;
-                margin: 0.8rem;
-            }
-            
-            input[type="text"] {
-                font-size: 1.3rem;
-                padding: 1.5rem;
-                max-width: 400px;
-                margin: 1rem auto;
-            }
-            
-            button, input[type="submit"] {
-                font-size: 1.3rem;
-                padding: 1.2rem 2.5rem;
-                margin: 1.5rem 1rem;
-            }
-            
-            .dashboard h2 {
-                font-size: 2.5rem;
-                margin-bottom: 3rem;
-            }
-            
-            .comment-card {
-                padding: 2rem;
-                margin: 1.5rem 0;
-                font-size: 1.1rem;
-            }
-            
-            .comment-card strong {
-                font-size: 1.3rem;
-            }
-            
-            .comment-card .comment-text {
-                font-size: 1.2rem;
-                margin: 1rem 0;
-            }
-            
-            textarea {
-                font-size: 1.2rem;
-                padding: 1.5rem;
-            }
+        .screen {
+            display: none; /* Ocultar todas las pantallas por defecto */
+            animation: fadeIn 0.8s ease-in-out;
         }
         
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
-            pointer-events: none;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        /* Pantalla de consentimiento de cookies - SIMPLE */
-        .cookie-consent-screen, .cookie-declined-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85); /* Fondo sólido, más compatible */
-            /* backdrop-filter: blur(10px); */ /* Desactivado para evitar bugs de renderizado */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-            display: none; /* Oculto por defecto */
+
+        h1, h2, h3 {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        
-        .consent-content, .declined-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            max-width: 500px;
-            width: 100%;
-            text-align: center;
-            border: 2px solid #ddd;
-            color: #333;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .consent-content h1 {
-            color: #333;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            font-weight: bold;
-        }
-        
-        .consent-content p {
-            color: #666;
-            margin-bottom: 2rem;
-            line-height: 1.5;
-            font-size: 1rem;
-        }
-        
-        .consent-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            width: 100%; /* Asegurar que ocupe todo el espacio */
-        }
-        
-        .accept-btn, .decline-btn {
-            background: #28a745 !important;
-            color: white !important;
-            font-size: 1.1rem !important;
-            padding: 1rem 2rem !important;
-            border: none !important;
-            border-radius: 5px !important;
-            cursor: pointer !important;
-            font-weight: bold !important;
-            min-width: 180px;
-            pointer-events: auto; /* Forzar que sea clicable */
-        }
-        
-        .accept-btn:hover {
-            background: #218838 !important;
-        }
-        
-        .decline-btn {
-            background: #dc3545 !important;
-            pointer-events: auto; /* Forzar que sea clicable */
-        }
-        
-        .decline-btn:hover {
-            background: #c82333 !important;
-        }
-        
-        .reload-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 1rem;
-        }
-        
-        .reload-btn:hover {
-            background: #0056b3;
-        }
-        
-        /* Pantalla de bienvenida */
-        .welcome-screen {
-            animation: fadeIn 1s ease-in;
-        }
-        
-        .welcome-screen h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-            animation: pulse 2s infinite;
-        }
-        
-        .welcome-screen p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-        
-        /* Dashboard de comentarios */
-        .dashboard {
-            display: none;
-            animation: fadeIn 1s ease-in;
-            text-align: left;
-        }
-        
-        .dashboard h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
-        
-        .daily-affirmation {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            text-align: center;
-        }
-        
-        .daily-affirmation h3 {
-            color: #ffeb3b;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        .affirmation-display {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: white;
-            line-height: 1.4;
-        }
-        
-        .comment-form-section {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .comment-form-section h3 {
-            color: #ffeb3b;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .comments-section {
-            margin: 2rem 0;
-        }
-        
-        .comments-section h3 {
-            color: #ffeb3b;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .comment-card {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            border-left: 4px solid #ffeb3b;
-            animation: slideInFromLeft 0.5s ease-out;
-            backdrop-filter: blur(10px);
-        }
-        
-        .comment-card strong {
-            color: #ffeb3b;
-            font-size: 1.1rem;
-        }
-        
-        .comment-card .comment-text {
-            margin: 0.5rem 0;
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
-        
-        .comment-card .comment-time {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
-        
-        /* Formularios y botones */
+
+        h2 { font-size: 1.8rem; margin-bottom: 1rem; }
+        p { font-size: 1.1rem; opacity: 0.9; }
+
+        /* Estilos de Formularios y Botones */
         input[type="text"], textarea {
             width: 100%;
             padding: 1rem;
             border: none;
             border-radius: 10px;
-            margin: 0.5rem 0;
+            margin: 1rem 0;
             font-size: 1.1rem;
             background: rgba(255, 255, 255, 0.9);
             color: #333;
         }
-        
+
         button, input[type="submit"] {
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
             color: white;
@@ -379,7 +108,6 @@
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            margin: 1rem 0.5rem;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
@@ -388,478 +116,257 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
         }
-        
-        .vote-buttons {
+
+        /* Pantalla de Afirmación */
+        .affirmation-text {
+            font-size: 2rem;
+            font-weight: bold;
             margin: 2rem 0;
+            line-height: 1.5;
         }
-        
-        .vote-buttons button {
-            font-size: 1.5rem;
-            margin: 0.5rem;
+        .timer {
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            color: #ffeb3b;
         }
-        
-        /* Animaciones */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+
+        /* Dashboard */
+        .dashboard { text-align: left; }
+        .daily-affirmation {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
         }
-        
-        @keyframes slideInFromLeft {
-            from { transform: translateX(-50px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .affirmation-display { font-size: 1.5rem; }
+        .comment-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ffeb3b;
         }
+        .comment-card strong { color: #ffeb3b; }
+        .comment-card .comment-text { margin: 0.5rem 0; }
+        .comment-card .comment-time { font-size: 0.9rem; opacity: 0.8; }
         
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        /* Responsive para móvil */
+        /* Responsive */
         @media (max-width: 768px) {
-            .container { 
-                padding: 1.5rem; 
-                width: 95%;
-            }
-            .welcome-screen h1 { font-size: 1.8rem; }
-            .welcome-screen p { font-size: 1rem; }
-            
-            input[type="text"] { 
-                font-size: 1rem; 
-                padding: 1rem;
-            }
-            button, input[type="submit"] { 
-                font-size: 1rem; 
-                padding: 0.8rem 1.5rem;
-            }
-            .dashboard h2 { font-size: 1.8rem; }
-            .comment-card { padding: 1.5rem; }
-            textarea { font-size: 1rem; }
-            
-            /* Responsive para consentimiento de cookies */
-            .consent-content, .declined-content {
-                padding: 1.5rem;
-                max-width: 95%;
-                margin: 0 auto;
-            }
-            
-            .consent-content h1, .declined-content h1 {
-                font-size: 1.5rem;
-            }
-            
-            .consent-content p, .declined-content p {
-                font-size: 0.9rem;
-            }
-            
-            .consent-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .accept-btn, .decline-btn {
-                font-size: 1rem !important;
-                padding: 0.8rem 1rem !important;
-                width: 100%;
-                max-width: 250px;
-            }
-            
-            /* Dashboard responsive */
-            .daily-affirmation {
-                padding: 1rem;
-                margin: 1rem 0;
-            }
-            
-            .affirmation-display {
-                font-size: 1.2rem;
-            }
-            
-            .comment-form-section {
-                padding: 1rem;
-                margin: 1rem 0;
-            }
-            
-            /* Responsive para el botón de cambiar nombre */
-            .comment-form-section div[style*="display: flex"] {
-                flex-direction: column !important;
-                gap: 5px !important;
-            }
-            
-            .comment-form-section button[onclick="changeName()"] {
-                width: 100%;
-                margin: 0.5rem 0;
-                font-size: 0.9rem !important;
-            }
-        }
-        
-        /* Estilos específicos para pantallas grandes (PC/Desktop) */
-        @media (min-width: 1024px) {
-            .consent-content, .declined-content {
-                max-width: 600px;
-                padding: 3rem;
-            }
-            
-            .consent-content h1, .declined-content h1 {
-                font-size: 2.2rem;
-                margin-bottom: 1.5rem;
-            }
-            
-            .consent-content p, .declined-content p {
-                font-size: 1.1rem;
-                margin-bottom: 2rem;
-            }
-            
-            .consent-buttons {
-                flex-direction: row;
-                justify-content: center;
-                gap: 1.5rem;
-            }
-            
-            .accept-btn {
-                font-size: 1.2rem !important;
-                padding: 1rem 2rem !important;
-                width: auto;
-                min-width: 200px;
-            }
-            
-            .decline-btn {
-                font-size: 1rem !important;
-                padding: 0.8rem 1.5rem !important;
-                width: auto;
-                min-width: 150px;
-            }
-            
-            /* Dashboard desktop */
-            .daily-affirmation {
-                padding: 2rem;
-                margin: 2rem 0;
-            }
-            
-            .affirmation-display {
-                font-size: 1.8rem;
-            }
-            
-            .comment-form-section {
-                padding: 2rem;
-                margin: 2rem 0;
-            }
+            .container { padding: 1.5rem; width: 95%; }
+            h2 { font-size: 1.5rem; }
+            .affirmation-text { font-size: 1.6rem; }
+            input[type="text"], textarea, button { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Pantallas de Cookies (fuera del contenedor principal) -->
-    <div class="cookie-consent-screen" id="cookieConsentScreen" style="display: none;">
-        <div class="consent-content">
+    <!-- Pantalla 1: Cookies -->
+    <div class="modal-overlay" id="cookieScreen">
+        <div class="modal-content">
             <h1>🍪 Cookies Necesarias</h1>
-            <p>Esta app necesita cookies para funcionar correctamente y proteger tus comentarios.</p>
-            <div class="consent-buttons">
-                <button onclick="acceptCookies()" class="accept-btn">
-                    ✅ Aceptar y Continuar
-                </button>
-                <button onclick="declineCookies()" class="decline-btn">
-                    ❌ Rechazar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <div class="cookie-declined-screen" id="cookieDeclinedScreen" style="display: none;">
-        <div class="declined-content">
-            <h1>😔 Lo sentimos</h1>
-            <p>Sin el consentimiento de cookies, no podemos ofrecerte la experiencia completa de Afirmaciones Diarias.</p>
-            <p>Si cambias de opinión, puedes recargar la página y aceptar las cookies.</p>
-            <button onclick="location.reload()" class="reload-btn">
-                🔄 Recargar página
-            </button>
-        </div>
-    </div>
-
-    <!-- Contenedor principal de la app -->
-    <div class="container">
-        <!-- Pantalla de bienvenida -->
-        <div class="welcome-screen" id="welcomeScreen" style="display: none;">
-            <h1>✨ ¡Perfecto! Comencemos tu día positivo ✨</h1>
-            <p>Ahora que todo está configurado, vamos a conocerte</p>
-            <form id="nameForm">
-                {% csrf_token %}
-                <input type="text" id="userName" placeholder="¿Cómo te llamas?" required>
-                <br>
-                <button type="submit">Comenzar mi día ✨</button>
-            </form>
-        </div>
-        
-        <!-- Dashboard de comentarios -->
-        <div class="dashboard" id="dashboard" style="display: none;">
-            <h2>✨ Afirmaciones Diarias ✨</h2>
-            
-            <!-- Afirmación del día -->
-            <div class="daily-affirmation">
-                <h3>Tu afirmación de hoy:</h3>
-                <div class="affirmation-display">
-                    {% if afirmacion %}{{ afirmacion }}{% endif %}
-                </div>
-            </div>
-            
-            <!-- Formulario de comentarios simplificado -->
-            <div class="comment-form-section">
-                <h3>💭 Comparte tu energía positiva</h3>
-                <form method="post" id="simpleCommentForm">
-                    {% csrf_token %}
-                    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
-                        <input type="text" name="nombre_comentario" placeholder="Tu nombre" required style="flex: 1;">
-                        <button type="button" onclick="changeName()" style="background: #ffc107; color: #333; padding: 0.5rem 1rem; font-size: 0.9rem; white-space: nowrap;">
-                            🔄 Cambiar
-                        </button>
-                    </div>
-                    <textarea name="comentario" rows="3" placeholder="Escribe tu mensaje positivo aquí..." required></textarea>
-                    <button type="submit">✨ Compartir Positividad</button>
-                </form>
-            </div>
-            
-            <!-- Comentarios existentes -->
-            <div class="comments-section">
-                <h3>💬 Mensajes de hoy</h3>
-                <div id="commentsContainer">
-                    {% for comment in comentarios %}
-                        <div class="comment-card">
-                            <strong>{{ comment.nombre_usuario }}</strong>
-                            <div class="comment-text">{{ comment.texto }}</div>
-                            <div class="comment-time">{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</div>
-                        </div>
-                    {% empty %}
-                        <div class="comment-card">
-                            <div class="comment-text">¡Sé el primero en compartir un mensaje positivo hoy! 🌟</div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-            
-            <!-- Botón de Compartir -->
-            <div style="text-align: center; margin: 2rem 0;">
-                <button onclick="shareApp()" style="background: linear-gradient(45deg, #ff6b6b, #4ecdc4); font-size: 1.1rem;">
-                    📱 ¡Comparte esta app!
-                </button>
-            </div>
+            <p>Usamos cookies para recordar quién eres y guardar tus comentarios de forma segura. ¿Aceptas?</p>
+            <button onclick="handleCookies(true)">✅ Aceptar y Continuar</button>
+            <button onclick="handleCookies(false)" style="background: #dc3545;">❌ Rechazar</button>
         </div>
     </div>
     
+    <!-- Pantalla de Rechazo -->
+    <div class="modal-overlay" id="declinedScreen">
+        <div class="modal-content">
+            <h1>😔 Lo sentimos</h1>
+            <p>La aplicación no puede funcionar sin cookies. Si cambias de opinión, por favor recarga la página.</p>
+        </div>
+    </div>
+
+    <!-- Contenedor Principal de la App -->
+    <div class="container">
+        <!-- Pantalla 2: Nombre -->
+        <div class="screen" id="nameScreen">
+            <h2>¡Bienvenido/a!</h2>
+            <p>Para empezar, dinos cómo te llamas.</p>
+            <form id="nameForm">
+                <input type="text" id="userName" placeholder="Escribe tu nombre aquí" required>
+                <button type="submit">Guardar y Continuar</button>
+            </form>
+        </div>
+
+        <!-- Pantalla 3: Afirmación -->
+        <div class="screen" id="affirmationScreen">
+            <h2>Tu afirmación de hoy es:</h2>
+            <p class="affirmation-text">{% if afirmacion %}{{ afirmacion }}{% else %}Cargando afirmación...{% endif %}</p>
+            <p class="timer">Reflexiona sobre esto... <span id="countdown">8</span></p>
+        </div>
+
+        <!-- Pantalla 4: Comentario -->
+        <div class="screen" id="commentScreen">
+            <h2>💭 Comparte tu energía</h2>
+            <p>Deja un mensaje positivo inspirado en la afirmación.</p>
+            <form id="commentForm">
+                {% csrf_token %}
+                <input type="hidden" name="nombre_comentario" id="commentUserName">
+                <textarea name="comentario" rows="4" placeholder="Escribe tu reflexión o mensaje..." required></textarea>
+                <button type="submit">Compartir Mensaje</button>
+            </form>
+        </div>
+
+        <!-- Pantalla 5: Dashboard -->
+        <div class="screen" id="dashboard">
+            <h2>💬 Mensajes de la Comunidad</h2>
+            <div class="daily-affirmation">
+                <h3>La afirmación de hoy fue:</h3>
+                <p class="affirmation-display">{% if afirmacion %}{{ afirmacion }}{% endif %}</p>
+            </div>
+            <div id="commentsContainer">
+                {% for comment in comentarios %}
+                    <div class="comment-card">
+                        <strong>{{ comment.nombre_usuario }}</strong>
+                        <div class="comment-text">{{ comment.texto }}</div>
+                        <div class="comment-time">{{ comment.fecha_creacion|date:"H:i d/m/Y" }}</div>
+                    </div>
+                {% empty %}
+                    <div class="comment-card">
+                        <p>¡Sé el primero en compartir un mensaje positivo hoy! 🌟</p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="shareApp()">📱 ¡Comparte esta app!</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // --- Estado de la App ---
         let currentUser = '';
-        let cookiesAccepted = false;
-        
-        // Función de debug temporal
-        function resetApp() {
-            console.log('🔧 RESET: Limpiando localStorage y reiniciando...');
-            localStorage.clear();
-            // Limpiar variables globales
-            currentUser = '';
-            cookiesAccepted = false;
-            // Ocultar todas las pantallas y mostrar la de cookies
-            hideAllScreens();
-            document.getElementById('cookieConsentScreen').style.display = 'flex';
-            console.log('🔧 RESET: App reiniciada');
-        }
-        
-        // Inicializar la app
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Iniciando app...');
-            
-            // Ocultar todo primero
-            hideAllScreens();
-            
-            // Verificar estado actual del localStorage
-            const currentConsent = localStorage.getItem('cookieConsent');
-            console.log('🍪 Estado actual del consentimiento:', currentConsent);
-            
-            // Decidir qué mostrar
-            if (currentConsent !== 'accepted') {
-                console.log('🍪 Mostrando pantalla de consentimiento');
-                document.getElementById('cookieConsentScreen').style.display = 'flex';
-            } else {
-                console.log('🍪 Consentimiento ya otorgado');
-                cookiesAccepted = true;
-                
-                const savedName = localStorage.getItem('userName');
-                if (savedName && savedName.trim()) {
-                    console.log('👤 Nombre guardado encontrado:', savedName);
-                    currentUser = savedName;
-                    showDashboard();
+
+        // --- Selectores de Elementos ---
+        const screens = {
+            cookie: document.getElementById('cookieScreen'),
+            declined: document.getElementById('declinedScreen'),
+            container: document.querySelector('.container'),
+            name: document.getElementById('nameScreen'),
+            affirmation: document.getElementById('affirmationScreen'),
+            comment: document.getElementById('commentScreen'),
+            dashboard: document.getElementById('dashboard')
+        };
+
+        const forms = {
+            name: document.getElementById('nameForm'),
+            comment: document.getElementById('commentForm')
+        };
+
+        // --- Lógica de Flujo ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const consent = localStorage.getItem('cookieConsent');
+            if (!consent) {
+                screens.cookie.style.display = 'flex';
+            } else if (consent === 'accepted') {
+                screens.container.style.display = 'block';
+                currentUser = localStorage.getItem('userName');
+                if (currentUser) {
+                    navigateTo('affirmation');
                 } else {
-                    console.log('👤 No hay nombre guardado, mostrando bienvenida');
-                    showWelcomeScreen();
+                    navigateTo('name');
                 }
+            } else {
+                screens.declined.style.display = 'flex';
             }
         });
         
-        // Función para ocultar todas las pantallas y el contenedor principal
-        function hideAllScreens() {
-            document.getElementById('cookieConsentScreen').style.display = 'none';
-            document.getElementById('cookieDeclinedScreen').style.display = 'none';
-            
-            const container = document.querySelector('.container');
-            container.style.display = 'none';
-
-            const welcomeScreen = document.getElementById('welcomeScreen');
-            if (welcomeScreen) welcomeScreen.style.display = 'none';
-            
-            const dashboard = document.getElementById('dashboard');
-            if (dashboard) dashboard.style.display = 'none';
-        }
-        
-        // Manejar formulario de nombre
-        document.getElementById('nameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            if (!cookiesAccepted) {
-                alert('Por favor, acepta las cookies primero para continuar.');
-                return;
+        function navigateTo(screenName) {
+            Object.values(screens).forEach(s => {
+                if(s && s.classList.contains('screen')) s.style.display = 'none';
+            });
+            if (screens[screenName]) {
+                screens[screenName].style.display = 'block';
+                
+                // Lógica específica al navegar a una pantalla
+                if (screenName === 'affirmation') {
+                    startAffirmationTimer();
+                }
             }
-            
+        }
+
+        function handleCookies(accepted) {
+            screens.cookie.style.display = 'none';
+            if (accepted) {
+                localStorage.setItem('cookieConsent', 'accepted');
+                screens.container.style.display = 'block';
+                navigateTo('name');
+            } else {
+                localStorage.setItem('cookieConsent', 'declined');
+                screens.declined.style.display = 'flex';
+            }
+        }
+
+        forms.name.addEventListener('submit', (e) => {
+            e.preventDefault();
             currentUser = document.getElementById('userName').value.trim();
             if (currentUser) {
-                // Guardar nombre en localStorage para futuras visitas
                 localStorage.setItem('userName', currentUser);
-                
-                // Ir directo al dashboard
-                showDashboard();
+                navigateTo('affirmation');
             }
         });
         
-        function showDashboard() {
-            hideAllScreens();
-            document.querySelector('.container').style.display = 'block';
-            document.getElementById('dashboard').style.display = 'block';
-            console.log('📊 Mostrando dashboard para usuario:', currentUser);
-            
-            // Configurar nombre del usuario en el formulario
-            if (currentUser) {
-                const nameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
-                if (nameField) {
-                    nameField.value = currentUser;
-                    nameField.style.backgroundColor = '#e8f5e8';
+        function startAffirmationTimer() {
+            let seconds = 8;
+            const countdownEl = document.getElementById('countdown');
+            countdownEl.textContent = seconds;
+
+            const timer = setInterval(() => {
+                seconds--;
+                countdownEl.textContent = seconds;
+                if (seconds <= 0) {
+                    clearInterval(timer);
+                    navigateTo('comment');
                 }
-            }
-            
-            // Configurar el formulario simplificado
-            setupSimpleCommentForm();
+            }, 1000);
         }
-        
-        // Configurar formulario de comentarios simplificado
-        function setupSimpleCommentForm() {
-            const form = document.getElementById('simpleCommentForm');
-            if (!form) return;
+
+        forms.comment.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const commentUserName = document.getElementById('commentUserName');
+            commentUserName.value = currentUser; // Asignar nombre de usuario actual
             
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                if (!cookiesAccepted) {
-                    alert('Error: Se necesitan cookies para enviar comentarios.');
-                    return;
+            const formData = new FormData(forms.comment);
+            const submitButton = forms.comment.querySelector('button');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Enviando...';
+
+            fetch('', {
+                method: 'POST',
+                body: new URLSearchParams(formData).toString(),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
                 }
-                
-                const submitButton = this.querySelector('button[type="submit"]');
-                const nameInput = this.querySelector('input[name="nombre_comentario"]');
-                const textarea = this.querySelector('textarea[name="comentario"]');
-                
-                const nombre = nameInput.value.trim();
-                const comentario = textarea.value.trim();
-                
-                if (!nombre || !comentario) {
-                    alert('Por favor, completa todos los campos.');
-                    return;
-                }
-                
-                if (comentario.length < 3) {
-                    alert('El comentario debe tener al menos 3 caracteres.');
-                    return;
-                }
-                
-                // Deshabilitar botón
-                submitButton.disabled = true;
-                submitButton.textContent = '⏳ Enviando...';
-                
-                // Crear formulario tradicional para envío directo
-                const hiddenForm = document.createElement('form');
-                hiddenForm.method = 'POST';
-                hiddenForm.action = '';
-                hiddenForm.style.display = 'none';
-                
-                // CSRF Token
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = 'csrfmiddlewaretoken';
-                csrfInput.value = document.querySelector('[name="csrfmiddlewaretoken"]').value;
-                hiddenForm.appendChild(csrfInput);
-                
-                // Nombre
-                const nameHiddenInput = document.createElement('input');
-                nameHiddenInput.type = 'hidden';
-                nameHiddenInput.name = 'nombre_comentario';
-                nameHiddenInput.value = nombre;
-                hiddenForm.appendChild(nameHiddenInput);
-                
-                // Comentario
-                const commentHiddenInput = document.createElement('input');
-                commentHiddenInput.type = 'hidden';
-                commentHiddenInput.name = 'comentario';
-                commentHiddenInput.value = comentario;
-                hiddenForm.appendChild(commentHiddenInput);
-                
-                // Indicador de envío directo
-                const directInput = document.createElement('input');
-                directInput.type = 'hidden';
-                directInput.name = 'direct_submit';
-                directInput.value = '1';
-                hiddenForm.appendChild(directInput);
-                
-                document.body.appendChild(hiddenForm);
-                
-                console.log('📝 Enviando comentario directamente:', {
-                    nombre: nombre,
-                    comentario: comentario.substring(0, 50)
-                });
-                
-                hiddenForm.submit();
+            })
+            .then(res => res.ok ? res.json() : Promise.reject(res))
+            .then(data => {
+                console.log(data.mensaje);
+                // Forzar recarga para ver el nuevo comentario en el dashboard
+                window.location.reload();
+            })
+            .catch(err => {
+                console.error('Error al enviar comentario:', err);
+                alert('Hubo un error al enviar tu comentario. Por favor, inténtalo de nuevo.');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Compartir Mensaje';
             });
-        }
-        
-        // Función para compartir la app
+        });
+
         function shareApp() {
             if (navigator.share) {
                 navigator.share({
                     title: 'Afirmación del Día ✨',
-                    text: '¡Descubre tu afirmación positiva diaria! Una app increíble para cultivar positividad.',
+                    text: '¡Descubre tu afirmación positiva diaria!',
                     url: window.location.href
                 });
             } else {
-                // Fallback para navegadores que no soportan Web Share API
-                const url = window.location.href;
-                const text = '¡Descubre tu afirmación positiva diaria! ✨ ' + url;
-                
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(text).then(() => {
-                        alert('¡Link copiado al portapapeles! Compártelo con tus amigos 📱');
-                    });
-                } else {
-                    prompt('Copia este link para compartir:', text);
-                }
-            }
-        }
-        
-        // Función para cambiar nombre de usuario
-        function changeName() {
-            const nameField = document.querySelector('#simpleCommentForm input[name="nombre_comentario"]');
-            if (nameField) {
-                // Limpiar el campo y enfocar
-                nameField.value = '';
-                nameField.style.backgroundColor = '#fff';
-                nameField.focus();
-                
-                // Actualizar variable global
-                currentUser = '';
-                
-                // Limpiar localStorage
-                localStorage.removeItem('userName');
-                
-                console.log('👤 Nombre de usuario borrado, permitiendo cambio');
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert('¡Link copiado al portapapeles!');
+                });
             }
         }
     </script>
