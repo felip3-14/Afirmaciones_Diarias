@@ -79,6 +79,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'afirmaciones_web.wsgi.application'
 
+# Forzar el motor de sesiones para máxima compatibilidad
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
@@ -146,7 +149,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 # Configuraciones de CSRF para mejor compatibilidad móvil
-CSRF_COOKIE_HTTPONLY = False  # Permitir acceso desde JavaScript
+CSRF_COOKIE_HTTPONLY = True  # Revertir a True, es más seguro y estándar
 CSRF_COOKIE_SAMESITE = 'Lax'  # Más flexible para móviles
 CSRF_COOKIE_NAME = 'csrftoken'  # Nombre explícito de la cookie
 CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'  # Header para el token
