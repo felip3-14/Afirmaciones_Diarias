@@ -20,9 +20,9 @@ Una aplicación web moderna y elegante para afirmaciones diarias positivas, cons
 
 ### 🧠 **Sistema Inteligente de Afirmaciones**
 - **88 afirmaciones únicas** cargadas desde JSON
-- **Sistema de pila** que evita repetir las últimas 4 afirmaciones
-- **Una afirmación por día** - Consistencia y rutina
-- **Secuencia inteligente** que maximiza la variedad
+- **Selección inteligente** que evita repetir las afirmaciones de los últimos 4 días
+- **Una afirmación por día** para fomentar una rutina consistente
+- **Mecanismo determinista** basado en el día del año para asegurar variedad
 
 ### 💬 **Interacción Social**
 - **Votaciones anónimas** (positivo, neutral, negativo)
@@ -60,17 +60,23 @@ pip install -r requirements.txt
 python manage.py migrate
 ```
 
-5. **Crear superusuario (opcional)**
+5. **Crear superusuario (opcional pero recomendado)**
 ```bash
 python manage.py createsuperuser
 ```
 
-6. **Ejecutar servidor de desarrollo**
+6. **Poblar la base de datos con las afirmaciones iniciales**
+Este es un paso crucial para que la aplicación tenga contenido.
+```bash
+python populate_db.py
+```
+
+7. **Ejecutar servidor de desarrollo**
 ```bash
 python manage.py runserver
 ```
 
-7. **Abrir en navegador**
+8. **Abrir en navegador**
 ```
 http://127.0.0.1:8000/
 ```
